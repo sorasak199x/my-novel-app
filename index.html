@@ -2080,17 +2080,6 @@
 
             .graph-wrapper, .table-wrapper {
                 padding: 24px 16px;
-                width: 100%;
-                min-width: 100%;
-                box-sizing: border-box;
-                overflow-x: hidden;
-            }
-
-            .timeline-wrapper {
-                width: 100%;
-                min-width: 100%;
-                box-sizing: border-box;
-                overflow-x: hidden;
             }
 
             .graph-body {
@@ -6112,13 +6101,10 @@
             function getMinScale(container, inner) {
                 const isMobile = window.matchMedia('(max-width: 768px)').matches;
                 if (!isMobile) return 0.25;
-                // บนมือถือ wrapper ถูก override ให้ width: 100% แล้ว
-                // ดังนั้นเนื้อหาพอดีจออยู่แล้วตอน scale=1 → minScale = 1
-                // ยกเว้นกรณีที่เนื้อหายังกว้างกว่าจอ (เช่น table ที่มีคอลัมน์เยอะ)
                 const containerW = container.clientWidth || window.innerWidth;
                 const contentW = inner.scrollWidth;
-                if (!contentW || contentW <= containerW) return 1;
-                // ถ้าเนื้อหายังกว้างกว่าจอ คำนวณ scale ให้พอดีจอ
+                if (!contentW || contentW <= containerW) return 0.5;
+                // คำนวณ scale ให้เนื้อหาพอดีจอพอดี (หัก 5% เผื่อ padding)
                 const fitScale = (containerW / contentW) * 0.95;
                 return Math.max(0.3, fitScale);
             }
