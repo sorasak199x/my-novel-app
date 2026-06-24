@@ -28,7 +28,7 @@
             padding: 0;
             background-color: var(--bg-color);
             color: var(--text-color);
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+            font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol";
             line-height: 1.5;
             overflow-x: hidden;
             -webkit-overflow-scrolling: touch;
@@ -2163,12 +2163,12 @@
         }
 
         /* ==========================================
-           Mobile: ปรับปุ่ม zoom และ toolbar ให้ใช้งานได้
-           บนมือถือ โดยไม่ได้เอาระบบ zoom ออก
+           Mobile: Adjust zoom buttons and toolbar for mobile
+           without removing the zoom system
            ========================================== */
         @media (max-width: 768px) {
-            /* ย้ายปุ่ม zoom ไปมุมซ้ายล่างและเรียงแนวนอน
-               เพื่อให้ไม่หลุดออกนอกจอเมื่อ browser zoom */
+            /* Move zoom buttons to bottom-left, arrange horizontally
+               so they don't overflow the screen when browser-zoomed */
             .view-zoom-controls {
                 bottom: max(16px, env(safe-area-inset-bottom, 16px));
                 left: 16px;
@@ -2180,11 +2180,11 @@
                 border-radius: 10px;
                 padding: 6px;
                 box-shadow: 0 4px 16px rgba(0,0,0,0.6);
-                /* ป้องกัน browser จาก intercept touch บนตัวปุ่ม */
+                /* Prevent browser from intercepting touch on buttons */
                 touch-action: none;
             }
 
-            /* ปุ่มแต่ละอันให้ใหญ่ขึ้นเพื่อแตะง่ายบนมือถือ */
+            /* Make each button larger for easier tapping on mobile */
             .view-zoom-btn {
                 width: 44px;
                 height: 44px;
@@ -2193,9 +2193,9 @@
                 touch-action: manipulation;
             }
 
-            /* toolbar ของ timeline/graph/table — ใช้ sticky
-               เพื่อให้ติดอยู่บนสุดของพื้นที่ scroll และไม่หลุดออกนอกจอ
-               charmap ใช้ overflow:hidden ดังนั้นไม่ได้รับผลกระทบ */
+            /* Sticky toolbar for timeline/graph/table
+               so it stays at the top of the scroll area and doesn't overflow.
+               charmap uses overflow:hidden so it is unaffected. */
             #timelineViewContainer .toolbar,
             #graphViewContainer .toolbar,
             #tableViewContainer .toolbar {
@@ -2212,7 +2212,7 @@
                 box-sizing: border-box;
             }
 
-            /* table-toolbar ให้ sticky ด้วยเช่นกัน */
+            /* Also make the table-toolbar sticky */
             .table-wrapper .table-toolbar {
                 position: sticky;
                 top: 0;
@@ -2225,14 +2225,14 @@
                 gap: 6px;
             }
 
-            /* ป้องกัน table-format-toolbar ล้นจอ */
+            /* Prevent table-format-toolbar from overflowing on mobile */
             .table-format-toolbar {
                 flex-wrap: wrap;
                 gap: 4px;
             }
         }
 
-        /* จอเล็กมาก (<= 480px) ปรับเพิ่มเติม */
+        /* Very small screens (<= 480px) — additional tweaks */
         @media (max-width: 480px) {
             .view-zoom-controls {
                 bottom: max(12px, env(safe-area-inset-bottom, 12px));
@@ -2412,7 +2412,7 @@
                         <div class="fmt-divider"></div>
                         <!-- Text color button -->
                         <div style="position:relative; display:inline-block;">
-                            <button type="button" class="fmt-color-btn" id="fmtTextColorPickerBtn" title="สีตัวอักษร" onclick="toggleTextColorPalette(event)" style="width:32px;height:32px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;overflow:visible;">
+                            <button type="button" class="fmt-color-btn" id="fmtTextColorPickerBtn" title="Text Color" onclick="toggleTextColorPalette(event)" style="width:32px;height:32px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;overflow:visible;">
                                 <span style="font-size:13px;font-weight:700;line-height:1;pointer-events:none;">A</span>
                                 <span id="fmtTextColorBar" style="display:block;width:20px;height:3px;border-radius:1px;background:#ff0000;pointer-events:none;"></span>
                             </button>
@@ -2503,7 +2503,7 @@
                         <div class="fmt-divider"></div>
                         <!-- Highlight row/col buttons (moved from table edge) -->
                         <div style="position:relative; display:inline-block;">
-                            <button type="button" class="fmt-color-btn" id="fmtHighlightPickerBtn" title="เลือกสีไฮไลท์" onclick="toggleHighlightPalette(event)" style="width:32px;height:32px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;overflow:visible;">
+                            <button type="button" class="fmt-color-btn" id="fmtHighlightPickerBtn" title="Highlight Color" onclick="toggleHighlightPalette(event)" style="width:32px;height:32px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;overflow:visible;">
                                 <span style="font-size:13px;line-height:1;pointer-events:none;">🪣</span>
                                 <span id="fmtCellBgBar" style="display:block;width:20px;height:3px;border-radius:1px;background:#ffe58f;pointer-events:none;"></span>
                             </button>
@@ -2591,15 +2591,15 @@
                                 </div>
                             </div>
                         </div>
-                        <button type="button" class="fmt-btn" id="fmtHighlightCellBtn" title="ไฮไลท์สีพื้นหลังเฉพาะเซลล์ที่เลือก" onclick="applyHighlightToCell()" style="font-size:11px; padding:0 4px; width:auto; min-width:36px;">Cell</button>
+                        <button type="button" class="fmt-btn" id="fmtHighlightCellBtn" title="Apply highlight color to selected cell" onclick="applyHighlightToCell()" style="font-size:11px; padding:0 4px; width:auto; min-width:36px;">Cell</button>
                         <button type="button" class="fmt-btn" id="fmtHighlightRowBtn" title="Highlight selected row" onclick="highlightSelectedRow()" style="font-size:11px; padding:0 4px; width:auto; min-width:32px;">Row</button>
                         <button type="button" class="fmt-btn" id="fmtHighlightColBtn" title="Highlight selected column" onclick="highlightSelectedCol()" style="font-size:11px; padding:0 4px; width:auto; min-width:32px;">Col</button>
-                        <button type="button" class="fmt-btn" id="fmtExcludeCellBtn" title="ยกเว้นเซลล์นี้จากสีแถว/คอลัมน์" onclick="toggleExcludeCell()" style="font-size:11px; padding:0 4px; width:auto; min-width:32px;">⊘</button>
+                        <button type="button" class="fmt-btn" id="fmtExcludeCellBtn" title="Exclude this cell from row/column color" onclick="toggleExcludeCell()" style="font-size:11px; padding:0 4px; width:auto; min-width:32px;">⊘</button>
                         <div class="fmt-divider"></div>
                         <button type="button" class="fmt-clear-btn" title="Clear formatting on selected cell" onclick="clearCellFormat()">Clear</button>
                     </div>
                 </div>
-                <p style="font-size:12px; color:var(--text-muted); margin: -16px 0 16px 0;">คลิกเซลล์เพื่อเลือก จากนั้นใช้แถบเครื่องมือด้านบนจัดรูปแบบ · ชี้ที่สุดแถวหรือคอลัมน์เพื่อเพิ่ม/ลบ</p>
+                <p style="font-size:12px; color:var(--text-muted); margin: -16px 0 16px 0;">Click a cell to select it, then use the toolbar above to format · Right-click a row or column header to add/delete</p>
                 <div class="table-grid-wrap">
                     <table class="custom-table" id="customTable"></table>
                 </div>
@@ -2671,10 +2671,10 @@
 
     <!-- Row/Col context popup menu -->
     <div id="tableRowColMenu">
-        <div class="rc-menu-item" id="rcMenuAddBefore" onclick="rcMenuAction('addBefore')"><span>＋</span> <span id="rcMenuAddBeforeLabel">เพิ่มก่อน</span></div>
-        <div class="rc-menu-item" id="rcMenuAddAfter" onclick="rcMenuAction('addAfter')"><span>＋</span> <span id="rcMenuAddAfterLabel">เพิ่มหลัง</span></div>
+        <div class="rc-menu-item" id="rcMenuAddBefore" onclick="rcMenuAction('addBefore')"><span>＋</span> <span id="rcMenuAddBeforeLabel">Insert before</span></div>
+        <div class="rc-menu-item" id="rcMenuAddAfter" onclick="rcMenuAction('addAfter')"><span>＋</span> <span id="rcMenuAddAfterLabel">Insert after</span></div>
         <div class="rc-menu-divider"></div>
-        <div class="rc-menu-item danger" id="rcMenuDelete" onclick="rcMenuAction('delete')"><span>✕</span> <span id="rcMenuDeleteLabel">ลบ</span></div>
+        <div class="rc-menu-item danger" id="rcMenuDelete" onclick="rcMenuAction('delete')"><span>✕</span> <span id="rcMenuDeleteLabel">Delete</span></div>
         <!-- Dual-mode items: shown only when right-clicking a cell (both row+col options) -->
         <div class="rc-menu-divider" id="rcMenuDualDivider" style="display:none;"></div>
         <div class="rc-menu-item" id="rcMenuRowAddBefore" style="display:none;" onclick="rcMenuDualAction('row','addBefore')"><span>＋</span> <span id="rcMenuRowAddBeforeLabel"></span></div>
@@ -2741,16 +2741,16 @@
                         : `<span style="display:inline-block;width:22px;flex-shrink:0;"></span>`;
 
                     item.innerHTML = `
-                                                                                        <div style="display: flex; align-items: center; gap: 6px; flex-grow: 1; overflow: hidden; min-width:0;">
-                                                                                            ${toggleArrow}
-                                                                                            <span class="project-icon">${iconText}</span>
-                                                                                            <span class="project-name" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${proj.title.replace(/<[^>]*>?/gm, '').trim() || "Untitled"}</span>
-                                                                                        </div>
-                                                                                        <div class="project-item-actions">
-                                                                                            <button class="proj-action-btn" onclick="openProjectMenu(event, ${proj.id}, this)">•••</button>
-                                                                                            <button class="proj-action-btn" onclick="openToolMenu(event, this, ${proj.id})">+</button>
-                                                                                        </div>
-                                                                                    `;
+                                                                                            <div style="display: flex; align-items: center; gap: 6px; flex-grow: 1; overflow: hidden; min-width:0;">
+                                                                                                ${toggleArrow}
+                                                                                                <span class="project-icon">${iconText}</span>
+                                                                                                <span class="project-name" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${proj.title.replace(/<[^>]*>?/gm, '').trim() || "Untitled"}</span>
+                                                                                            </div>
+                                                                                            <div class="project-item-actions">
+                                                                                                <button class="proj-action-btn" onclick="openProjectMenu(event, ${proj.id}, this)">•••</button>
+                                                                                                <button class="proj-action-btn" onclick="openToolMenu(event, this, ${proj.id})">+</button>
+                                                                                            </div>
+                                                                                        `;
 
                     attachDragListeners(item, proj.id);
                     list.appendChild(item);
@@ -3071,15 +3071,15 @@
 
                 let iconText = proj.iconHtml.includes('<img') ? '🖼️' : proj.iconHtml;
                 item.innerHTML = `
-                                                                                                    <div style="display: flex; align-items: center; gap: 15px; overflow: hidden;">
-                                                                                                        <span style="font-size: 24px; flex-shrink: 0;">${iconText}</span>
-                                                                                                        <span style="font-weight: bold; font-size: 16px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${proj.title.replace(/<[^>]*>?/gm, '').trim() || "Untitled"}</span>
-                                                                                                    </div>
-                                                                                                    <div style="display: flex; gap: 10px; flex-shrink: 0;">
-                                                                                                        <button onclick="restoreProject(${proj.id}, event)" style="padding: 8px 16px; background: var(--hover-bg); color: var(--text-color); border: 1px solid var(--border-color); border-radius: 6px; cursor: pointer; font-size: 14px; transition: background 0.2s;" onmouseover="this.style.background='rgba(255,255,255,0.1)'" onmouseout="this.style.background='var(--hover-bg)'">Restore</button>
-                                                                                                        <button onclick="permanentlyDeleteProject(${proj.id}, event)" style="padding: 8px 16px; background: transparent; color: var(--danger-color); border: 1px solid var(--danger-color); border-radius: 6px; cursor: pointer; font-size: 14px; transition: background 0.2s;" onmouseover="this.style.background='rgba(235, 87, 87, 0.1)'" onmouseout="this.style.background='transparent'">Delete Permanently</button>
-                                                                                                    </div>
-                                                                                                `;
+                                                                                                        <div style="display: flex; align-items: center; gap: 15px; overflow: hidden;">
+                                                                                                            <span style="font-size: 24px; flex-shrink: 0;">${iconText}</span>
+                                                                                                            <span style="font-weight: bold; font-size: 16px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${proj.title.replace(/<[^>]*>?/gm, '').trim() || "Untitled"}</span>
+                                                                                                        </div>
+                                                                                                        <div style="display: flex; gap: 10px; flex-shrink: 0;">
+                                                                                                            <button onclick="restoreProject(${proj.id}, event)" style="padding: 8px 16px; background: var(--hover-bg); color: var(--text-color); border: 1px solid var(--border-color); border-radius: 6px; cursor: pointer; font-size: 14px; transition: background 0.2s;" onmouseover="this.style.background='rgba(255,255,255,0.1)'" onmouseout="this.style.background='var(--hover-bg)'">Restore</button>
+                                                                                                            <button onclick="permanentlyDeleteProject(${proj.id}, event)" style="padding: 8px 16px; background: transparent; color: var(--danger-color); border: 1px solid var(--danger-color); border-radius: 6px; cursor: pointer; font-size: 14px; transition: background 0.2s;" onmouseover="this.style.background='rgba(235, 87, 87, 0.1)'" onmouseout="this.style.background='transparent'">Delete Permanently</button>
+                                                                                                        </div>
+                                                                                                    `;
                 list.appendChild(item);
             });
         }
@@ -3215,7 +3215,7 @@
                     startRepositionCover();
                 }).catch(() => {
                     coverContainer.style.opacity = '1';
-                    alert('❌ อัพโหลด Cover ไม่สำเร็จ กรุณาลองใหม่');
+                    alert('❌ Cover upload failed. Please try again.');
                 });
             }
         }
@@ -3278,7 +3278,7 @@
                     renderProjectList();
                 }).catch(() => {
                     iconDisplay.style.opacity = '1';
-                    alert('❌ อัพโหลด Icon ไม่สำเร็จ กรุณาลองใหม่');
+                    alert('❌ Icon upload failed. Please try again.');
                 });
             }
         }
@@ -3474,13 +3474,13 @@
             const controls = document.createElement('div');
             controls.className = 'block-controls';
             controls.innerHTML = `
-                                                                                                                                <button class="add-btn" onclick="openAddMenu(event, this)">+
-                                                                                                                                    <span class="tooltip-text">Click to add below<br>Alt-click to add a block above</span>
-                                                                                                                                </button>
-                                                                                                                                <button class="drag-btn" onclick="openOptionsMenu(event, this)">⋮⋮
-                                                                                                                                    <span class="tooltip-text">Drag to move<br>Click or ctrl/ to open menu</span>
-                                                                                                                                </button>
-                                                                                                                            `;
+                                                                                                                                    <button class="add-btn" onclick="openAddMenu(event, this)">+
+                                                                                                                                        <span class="tooltip-text">Click to add below<br>Alt-click to add a block above</span>
+                                                                                                                                    </button>
+                                                                                                                                    <button class="drag-btn" onclick="openOptionsMenu(event, this)">⋮⋮
+                                                                                                                                        <span class="tooltip-text">Drag to move<br>Click or ctrl/ to open menu</span>
+                                                                                                                                    </button>
+                                                                                                                                `;
 
             const wrapper = document.createElement('div');
             wrapper.className = 'block-content-wrapper';
@@ -3529,15 +3529,15 @@
                 ghost.id = 'ghostAddBlock';
                 ghost.className = 'block-row ghost-row';
                 ghost.innerHTML = `
-                                                                                                                                    <div class="block-main">
-                                                                                                                                        <div class="block-controls" style="opacity: 1;">
-                                                                                                                                            <button class="add-btn" onclick="openAddMenu(event, this); event.stopPropagation();">+</button>
+                                                                                                                                        <div class="block-main">
+                                                                                                                                            <div class="block-controls" style="opacity: 1;">
+                                                                                                                                                <button class="add-btn" onclick="openAddMenu(event, this); event.stopPropagation();">+</button>
+                                                                                                                                            </div>
+                                                                                                                                            <div class="block-content-wrapper" onclick="addBlockFromGhost(); event.stopPropagation();">
+                                                                                                                                                <div class="ghost-placeholder">Click to add below</div>
+                                                                                                                                            </div>
                                                                                                                                         </div>
-                                                                                                                                        <div class="block-content-wrapper" onclick="addBlockFromGhost(); event.stopPropagation();">
-                                                                                                                                            <div class="ghost-placeholder">Click to add below</div>
-                                                                                                                                        </div>
-                                                                                                                                    </div>
-                                                                                                                                `;
+                                                                                                                                    `;
             }
             editor.appendChild(ghost);
         }
@@ -3944,7 +3944,7 @@
             // Show loading indicator
             const loadingBlock = createBlockElement('text');
             const loadingContent = loadingBlock.querySelector('.block-content');
-            loadingContent.innerHTML = `<em style="color:var(--text-muted)">⏳ กำลังอัพโหลด...</em>`;
+            loadingContent.innerHTML = `<em style="color:var(--text-muted)">⏳ Uploading...</em>`;
             loadingContent.setAttribute('contenteditable', 'false');
             if (isGhostActive) {
                 const ghost = document.getElementById('ghostAddBlock');
@@ -3964,7 +3964,7 @@
                 saveCurrentProjectData();
             }).catch(() => {
                 loadingBlock.remove();
-                alert('❌ อัพโหลดไฟล์ไม่สำเร็จ กรุณาลองใหม่');
+                alert('❌ File upload failed. Please try again.');
             });
 
             event.target.value = '';
@@ -3980,22 +3980,22 @@
             newItem.className = 'timeline-item';
 
             newItem.innerHTML = `
-                                                                                            <div class="timeline-content">
-                                                                                                <div class="datetime-group">
-                                                                                                    <input type="text" class="input-date" placeholder="DD/MM/YYYY">
-                                                                                                    <input type="text" class="input-time" placeholder="Time / Time Period">
-                                                                                                </div>
-                                                                                                <div class="details-group">
-                                                                                                    <div class="header-row">
-                                                                                                        <input type="text" class="input-title" placeholder="Event Title...">
-                                                                                                        <button class="btn-delete-event" onclick="deleteTimelineItem(this)">Delete</button>
+                                                                                                <div class="timeline-content">
+                                                                                                    <div class="datetime-group">
+                                                                                                        <input type="text" class="input-date" placeholder="DD/MM/YYYY">
+                                                                                                        <input type="text" class="input-time" placeholder="Time / Time Period">
                                                                                                     </div>
-                                                                                                    <div class="timeline-body">
-                                                                                                        <textarea placeholder="Type event details here..."></textarea>
+                                                                                                    <div class="details-group">
+                                                                                                        <div class="header-row">
+                                                                                                            <input type="text" class="input-title" placeholder="Event Title...">
+                                                                                                            <button class="btn-delete-event" onclick="deleteTimelineItem(this)">Delete</button>
+                                                                                                        </div>
+                                                                                                        <div class="timeline-body">
+                                                                                                            <textarea placeholder="Type event details here..."></textarea>
+                                                                                                        </div>
                                                                                                     </div>
                                                                                                 </div>
-                                                                                            </div>
-                                                                                        `;
+                                                                                            `;
 
             container.appendChild(newItem);
             newItem.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
@@ -4142,24 +4142,24 @@
                 node.style.top = ((workspace.clientHeight / 2 - panY) / scale + offsetY - 40) + 'px';
             }
             node.innerHTML = `
-                                                                                                    <div class="color-palette" id="palette_${id}">
-                                                                                                        <div class="swatch c-default" onclick="setColor('${id}','border-c-default',event)"></div>
-                                                                                                        <div class="swatch c-blue" onclick="setColor('${id}','border-c-blue',event)"></div>
-                                                                                                        <div class="swatch c-red" onclick="setColor('${id}','border-c-red',event)"></div>
-                                                                                                        <div class="swatch c-pink" onclick="setColor('${id}','border-c-pink',event)"></div>
-                                                                                                        <div class="swatch c-green" onclick="setColor('${id}','border-c-green',event)"></div>
-                                                                                                        <div class="swatch c-purple" onclick="setColor('${id}','border-c-purple',event)"></div>
-                                                                                                        <div class="swatch c-yellow" onclick="setColor('${id}','border-c-yellow',event)"></div>
-                                                                                                    </div>
-                                                                                                    <div class="image-circle ${defaultColor}" id="circle_${id}">
-                                                                                                        <span>Image</span>
-                                                                                                        <div class="btn-delete-node node-btn" onclick="deleteNode('${id}',event)">✕</div>
-                                                                                                        <div class="btn-color-trigger node-btn" onclick="togglePalette('${id}',event)">🎨</div>
-                                                                                                        <div class="btn-connect node-btn" onpointerdown="startLinking('${id}',event)">＋</div>
-                                                                                                    </div>
-                                                                                                    <label class="btn-upload">+ Upload Image<input type="file" accept="image/*" onchange="uploadImg(this,'circle_${id}')" style="display:none;"></label>
-                                                                                                    <input type="text" class="char-name" value="${defaultName || `Character ${charCount}`}" onfocus="this.select()">
-                                                                                                `;
+                                                                                                        <div class="color-palette" id="palette_${id}">
+                                                                                                            <div class="swatch c-default" onclick="setColor('${id}','border-c-default',event)"></div>
+                                                                                                            <div class="swatch c-blue" onclick="setColor('${id}','border-c-blue',event)"></div>
+                                                                                                            <div class="swatch c-red" onclick="setColor('${id}','border-c-red',event)"></div>
+                                                                                                            <div class="swatch c-pink" onclick="setColor('${id}','border-c-pink',event)"></div>
+                                                                                                            <div class="swatch c-green" onclick="setColor('${id}','border-c-green',event)"></div>
+                                                                                                            <div class="swatch c-purple" onclick="setColor('${id}','border-c-purple',event)"></div>
+                                                                                                            <div class="swatch c-yellow" onclick="setColor('${id}','border-c-yellow',event)"></div>
+                                                                                                        </div>
+                                                                                                        <div class="image-circle ${defaultColor}" id="circle_${id}">
+                                                                                                            <span>Image</span>
+                                                                                                            <div class="btn-delete-node node-btn" onclick="deleteNode('${id}',event)">✕</div>
+                                                                                                            <div class="btn-color-trigger node-btn" onclick="togglePalette('${id}',event)">🎨</div>
+                                                                                                            <div class="btn-connect node-btn" onpointerdown="startLinking('${id}',event)">＋</div>
+                                                                                                        </div>
+                                                                                                        <label class="btn-upload">+ Upload Image<input type="file" accept="image/*" onchange="uploadImg(this,'circle_${id}')" style="display:none;"></label>
+                                                                                                        <input type="text" class="char-name" value="${defaultName || `Character ${charCount}`}" onfocus="this.select()">
+                                                                                                    `;
             initDrag(node); workspaceInner.appendChild(node); return id;
         }
 
@@ -4390,39 +4390,39 @@
             card.className = 'chart-card';
             card.id = cardId;
             card.innerHTML = `
-                                                                            <div class="chart-card-header" onclick="toggleChartCard('${cardId}')">
-                                                                                <span class="chart-card-toggle">▼</span>
-                                                                                <input class="chart-card-title-input" type="text" placeholder="Chart Title…"
-                                                                                    value="${savedData ? (savedData.title || '').replace(/"/g, '&quot;') : ''}"
-                                                                                    onclick="event.stopPropagation()"
-                                                                                    oninput="renderChartCard('${cardId}')">
-                                                                                <span class="chart-card-type-badge" id="${badgeId}">Bar ↕</span>
-                                                                                <button class="chart-card-delete" onclick="deleteChartCard(event,'${cardId}')" title="Delete this chart">✕</button>
-                                                                            </div>
-                                                                            <div class="chart-card-body">
-                                                                                <div class="graph-toolbar" style="margin-bottom:20px;">
-                                                                                    <label class="graph-label">Type
-                                                                                        <select id="${typeId}" onchange="renderChartCard('${cardId}')">
-                                                                                            <option value="bar">Bar (Vertical)</option>
-                                                                                            <option value="bar_h">Bar (Horizontal)</option>
-                                                                                            <option value="line">Line</option>
-                                                                                            <option value="pie">Pie</option>
-                                                                                        </select>
-                                                                                    </label>
-                                                                                    <button class="btn-notion primary" onclick="addChartRow('${rowsId}','${cardId}')">＋ Add Row</button>
+                                                                                <div class="chart-card-header" onclick="toggleChartCard('${cardId}')">
+                                                                                    <span class="chart-card-toggle">▼</span>
+                                                                                    <input class="chart-card-title-input" type="text" placeholder="Chart Title…"
+                                                                                        value="${savedData ? (savedData.title || '').replace(/"/g, '&quot;') : ''}"
+                                                                                        onclick="event.stopPropagation()"
+                                                                                        oninput="renderChartCard('${cardId}')">
+                                                                                    <span class="chart-card-type-badge" id="${badgeId}">Bar ↕</span>
+                                                                                    <button class="chart-card-delete" onclick="deleteChartCard(event,'${cardId}')" title="Delete this chart">✕</button>
                                                                                 </div>
-                                                                                <div class="graph-body" id="gbody_${cardId}">
-                                                                                    <div class="graph-data-panel">
-                                                                                        <div class="graph-data-header">
-                                                                                            <span>Label</span><span>Value</span><span>Color</span><span></span>
+                                                                                <div class="chart-card-body">
+                                                                                    <div class="graph-toolbar" style="margin-bottom:20px;">
+                                                                                        <label class="graph-label">Type
+                                                                                            <select id="${typeId}" onchange="renderChartCard('${cardId}')">
+                                                                                                <option value="bar">Bar (Vertical)</option>
+                                                                                                <option value="bar_h">Bar (Horizontal)</option>
+                                                                                                <option value="line">Line</option>
+                                                                                                <option value="pie">Pie</option>
+                                                                                            </select>
+                                                                                        </label>
+                                                                                        <button class="btn-notion primary" onclick="addChartRow('${rowsId}','${cardId}')">＋ Add Row</button>
+                                                                                    </div>
+                                                                                    <div class="graph-body" id="gbody_${cardId}">
+                                                                                        <div class="graph-data-panel">
+                                                                                            <div class="graph-data-header">
+                                                                                                <span>Label</span><span>Value</span><span>Color</span><span></span>
+                                                                                            </div>
+                                                                                            <div id="${rowsId}"></div>
                                                                                         </div>
-                                                                                        <div id="${rowsId}"></div>
+                                                                                        <div class="graph-canvas-panel" style="min-height:380px;">
+                                                                                            <canvas id="${canvasId}"></canvas>
+                                                                                        </div>
                                                                                     </div>
-                                                                                    <div class="graph-canvas-panel" style="min-height:380px;">
-                                                                                        <canvas id="${canvasId}"></canvas>
-                                                                                    </div>
-                                                                                </div>
-                                                                            </div>`;
+                                                                                </div>`;
 
             document.getElementById('chartCardList').appendChild(card);
 
@@ -4465,15 +4465,15 @@
             row.className = 'graph-row';
             row.id = rowId;
             row.innerHTML = `
-                                                                            <input type="text" class="graph-label-input" placeholder="Label…"
-                                                                                value="${label !== undefined ? String(label).replace(/"/g, '&quot;') : ''}"
-                                                                                oninput="renderChartCard('${cardId}')">
-                                                                            <input type="number" class="graph-value-input" placeholder="0"
-                                                                                value="${value !== undefined && value !== null ? value : ''}"
-                                                                                oninput="renderChartCard('${cardId}')">
-                                                                            <input type="color" class="graph-color-input" value="${autoColor}"
-                                                                                oninput="renderChartCard('${cardId}')">
-                                                                            <button class="graph-row-delete" onclick="document.getElementById('${rowId}').remove(); renderChartCard('${cardId}')" title="Delete row">✕</button>`;
+                                                                                <input type="text" class="graph-label-input" placeholder="Label…"
+                                                                                    value="${label !== undefined ? String(label).replace(/"/g, '&quot;') : ''}"
+                                                                                    oninput="renderChartCard('${cardId}')">
+                                                                                <input type="number" class="graph-value-input" placeholder="0"
+                                                                                    value="${value !== undefined && value !== null ? value : ''}"
+                                                                                    oninput="renderChartCard('${cardId}')">
+                                                                                <input type="color" class="graph-color-input" value="${autoColor}"
+                                                                                    oninput="renderChartCard('${cardId}')">
+                                                                                <button class="graph-row-delete" onclick="document.getElementById('${rowId}').remove(); renderChartCard('${cardId}')" title="Delete row">✕</button>`;
             document.getElementById(rowsId).appendChild(row);
         }
 
@@ -5007,7 +5007,7 @@
             thAddCol.className = 'table-add-col-th';
             const addColBtn = document.createElement('button');
             addColBtn.className = 'table-add-col-btn';
-            addColBtn.title = 'เพิ่มคอลัมน์';
+            addColBtn.title = 'Add column';
             addColBtn.textContent = '+';
             addColBtn.style.height = (currentTableData.rowHeights[0] || 36) + 'px';
             addColBtn.addEventListener('click', (e) => { e.stopPropagation(); addTableColumn(); });
@@ -5063,7 +5063,7 @@
                 const wrap = document.getElementById('customTable').parentNode;
                 wrap.parentNode.insertBefore(addRowZone, wrap.nextSibling);
             }
-            addRowZone.innerHTML = `<button class="table-add-row-btn" onclick="addTableRow()" title="เพิ่มแถว"><span style="font-size:16px;line-height:1;">+</span><span style="font-size:13px;">เพิ่มแถว</span></button>`;
+            addRowZone.innerHTML = `<button class="table-add-row-btn" onclick="addTableRow()" title="Add row"><span style="font-size:16px;line-height:1;">+</span><span style="font-size:13px;">Add Row</span></button>`;
 
             // Re-apply selection highlight box if a cell is still selected
             if (selectedTableCell) {
@@ -5294,9 +5294,9 @@
 
             const pos = resolvedIdx + 1;
             const isRow = type === 'row';
-            document.getElementById('rcMenuAddBeforeLabel').textContent = isRow ? ('แทรกแถวก่อนแถว ' + pos) : ('แทรกคอลัมน์ก่อนคอลัมน์ ' + pos);
-            document.getElementById('rcMenuAddAfterLabel').textContent = isRow ? ('แทรกแถวหลังแถว ' + pos) : ('แทรกคอลัมน์หลังคอลัมน์ ' + pos);
-            document.getElementById('rcMenuDeleteLabel').textContent = isRow ? ('ลบแถว ' + pos) : ('ลบคอลัมน์ ' + pos);
+            document.getElementById('rcMenuAddBeforeLabel').textContent = isRow ? ('Insert row before row ' + pos) : ('Insert column before column ' + pos);
+            document.getElementById('rcMenuAddAfterLabel').textContent = isRow ? ('Insert row after row ' + pos) : ('Insert column after column ' + pos);
+            document.getElementById('rcMenuDeleteLabel').textContent = isRow ? ('Delete row ' + pos) : ('Delete column ' + pos);
 
             menu.style.left = e.clientX + 'px';
             menu.style.top = e.clientY + 'px';
@@ -5351,9 +5351,9 @@
             addBefore.style.display = 'flex';
             addAfter.style.display = 'flex';
             del.style.display = 'flex';
-            document.getElementById('rcMenuAddBeforeLabel').textContent = 'แทรกคอลัมน์ก่อนคอลัมน์ ' + colPos;
-            document.getElementById('rcMenuAddAfterLabel').textContent = 'แทรกคอลัมน์หลังคอลัมน์ ' + colPos;
-            document.getElementById('rcMenuDeleteLabel').textContent = 'ลบคอลัมน์ ' + colPos;
+            document.getElementById('rcMenuAddBeforeLabel').textContent = 'Insert column before column ' + colPos;
+            document.getElementById('rcMenuAddAfterLabel').textContent = 'Insert column after column ' + colPos;
+            document.getElementById('rcMenuDeleteLabel').textContent = 'Delete column ' + colPos;
             rcMenuContext = { type: 'col', index: colIdx };
 
             // Show row items if body cell
@@ -5368,9 +5368,9 @@
                 rowAddBefore.style.display = 'flex';
                 rowAddAfter.style.display = 'flex';
                 rowDel.style.display = 'flex';
-                document.getElementById('rcMenuRowAddBeforeLabel').textContent = 'แทรกแถวก่อนแถว ' + rowPos;
-                document.getElementById('rcMenuRowAddAfterLabel').textContent = 'แทรกแถวหลังแถว ' + rowPos;
-                document.getElementById('rcMenuRowDeleteLabel').textContent = 'ลบแถว ' + rowPos;
+                document.getElementById('rcMenuRowAddBeforeLabel').textContent = 'Insert row before row ' + rowPos;
+                document.getElementById('rcMenuRowAddAfterLabel').textContent = 'Insert row after row ' + rowPos;
+                document.getElementById('rcMenuRowDeleteLabel').textContent = 'Delete row ' + rowPos;
             } else {
                 dualDivider.style.display = 'none';
                 dualDivider2.style.display = 'none';
@@ -5471,7 +5471,7 @@
             if (bar) bar.style.background = color;
             // Apply to selected cell
             const cell = getSelectedCellObj();
-            if (!cell) { alert('คลิกเซลล์ก่อนเลือกสีตัวอักษร'); return; }
+            if (!cell) { alert('Please click a cell first before selecting text color.'); return; }
             cell.color = color;
             renderTable();
         }
@@ -5487,23 +5487,23 @@
         /* ---- Exclude cell from row/col highlight ---- */
         function toggleExcludeCell() {
             const cell = getSelectedCellObj();
-            if (!cell) { alert('คลิกเซลล์ก่อน'); return; }
+            if (!cell) { alert('Please click a cell first.'); return; }
             cell.excludeBg = !cell.excludeBg;
             renderTable();
             updateFormatToolbarState();
         }
 
         function highlightSelectedRow() {
-            if (!currentTableData || !selectedTableCell) { alert('คลิกเซลล์ในแถวที่ต้องการไฮไลท์ก่อน'); return; }
+            if (!currentTableData || !selectedTableCell) { alert('Please click a cell in the row you want to highlight first.'); return; }
             const rowIdx = selectedTableCell.area === 'body' ? selectedTableCell.rowIdx : null;
-            if (rowIdx === null) { alert('เลือกเซลล์ในแถวข้อมูล (ไม่ใช่หัวตาราง) ก่อน'); return; }
+            if (rowIdx === null) { alert('Please select a data cell (not a header) first.'); return; }
             const cur = currentTableData.rowColors[rowIdx];
             currentTableData.rowColors[rowIdx] = cur === _toolbarHighlightColor ? null : _toolbarHighlightColor;
             renderTable();
         }
 
         function highlightSelectedCol() {
-            if (!currentTableData || !selectedTableCell) { alert('คลิกเซลล์ในคอลัมน์ที่ต้องการไฮไลท์ก่อน'); return; }
+            if (!currentTableData || !selectedTableCell) { alert('Please click a cell in the column you want to highlight first.'); return; }
             const colIdx = selectedTableCell.colIdx;
             const cur = currentTableData.colColors[colIdx];
             currentTableData.colColors[colIdx] = cur === _toolbarHighlightColor ? null : _toolbarHighlightColor;
@@ -5613,7 +5613,7 @@
 
         function applyHighlightToCell() {
             const cell = getSelectedCellObj();
-            if (!cell) { alert('คลิกเซลล์ก่อนเลือกสีพื้นหลัง'); return; }
+            if (!cell) { alert('Please click a cell first before selecting a background color.'); return; }
             if (!_toolbarHighlightColor) {
                 cell.bg = null;
             } else {
@@ -5935,36 +5935,36 @@
         })();
 
         // ====================================================================
-        //  ระบบเซฟอัตโนมัติ (LocalStorage) และ ระบบเซฟออนไลน์ (Google Drive Cloud)
+        //  Auto-save system (LocalStorage) and Online Save (Google Drive Cloud)
         // ====================================================================
 
-        // [1] ตลบหลังระบบเดิม: ทุกครั้งที่มีการเรียกเซฟข้อมูล ให้แอบบันทึกฐานข้อมูลลงเบราว์เซอร์เครื่องนี้ทันที
+        // [1] Wrap the original save function: every time data is saved, also silently persist to localStorage
         const originalSaveCurrentProjectData = saveCurrentProjectData;
         saveCurrentProjectData = function () {
             if (typeof originalSaveCurrentProjectData === 'function') {
                 originalSaveCurrentProjectData();
             }
-            // สั่งบันทึกลงหน่วยความจำเบราว์เซอร์แบบเงียบๆ
+            // Silently save to browser memory
             localStorage.setItem('my_novel_database', JSON.stringify(projects));
         };
 
-        // [2] ระบบพิมพ์ปุ๊บเซฟปั๊บ: เมื่อใดก็ตามที่มีการพิมพ์แก้ไขข้อความหรือปรับเนื้อหาบนเว็บ ระบบจะเซฟความจำให้ตลอดเวลาแบบ Real-time
+        // [2] Real-time save: whenever the user edits any content on the page, auto-save immediately
         document.addEventListener('input', () => {
             saveCurrentProjectData();
         });
 
-        // [3] --- Initialize (โหลดข้อมูลเซฟเก่าที่ค้างไว้ขึ้นมาแสดงอัตโนมัติเมื่อเปิดไฟล์) ---
+        // [3] --- Initialize: restore previous auto-saved data on page load ---
         const savedData = localStorage.getItem('my_novel_database');
         if (savedData) {
             try {
                 projects = JSON.parse(savedData);
-                // อัปเดตตัวนับ ID ไม่ให้ชนกัน
+                // Update the ID counter to avoid collisions
                 const maxId = projects.reduce((max, p) => (p.id > max ? p.id : max), 0);
                 projectCounter = maxId;
 
                 renderProjectList();
 
-                // ใช้ทริกอัจฉริยะ: จำลองการคลิกเลือกโปรเจกต์แรกสุดเพื่อแสดงเนื้อหาล่าสุดขึ้นหน้าจอทันที
+                // Simulate a click on the first project to immediately show its content
                 setTimeout(() => {
                     const firstItem = document.querySelector('.project-item');
                     if (firstItem) {
@@ -5974,26 +5974,26 @@
                     }
                 }, 100);
             } catch (e) {
-                console.error("โหลดข้อมูล Auto-save ล้มเหลว", e);
+                console.error("Failed to load Auto-save data", e);
                 createNewProject();
             }
         } else {
-            createNewProject(); // ถ้าเปิดเว็บครั้งแรกและยังไม่มีเซฟ ให้สร้างหน้าเปล่าขึ้นมา
+            createNewProject(); // First time opening with no saved data — create a blank page
         }
 
-        // [4] --- ระบบเสริม: ฟังก์ชันยิงข้อมูลไปเซฟออนไลน์บน Google Drive ---
-        // (ถ้าวางโค้ดนี้เสร็จแล้ว ระบบเซฟในเครื่องจะทำงานทันที ส่วนถ้าวันไหนอยากใช้แบบออนไลน์ ค่อยเอา Web App URL มาใส่แทนตัวหนังสือข้างล่างนี้ครับ)
+        // [4] --- Optional: function to push data to Google Drive for cloud sync ---
+        // (Local saving works immediately once this code runs. Replace the CLOUD_API_URL string with your Google Apps Script Web App URL to enable cross-device sync.)
         const CLOUD_API_URL = "https://script.google.com/macros/s/AKfycbwDxtLtsEWmUeBMzzmqu-Cg_V8qIIAouwS_s1Zjlg1BdVE5lg3fFsu8Fo-1taCfMdc/exec";
 
         function saveToCloud() {
-            saveCurrentProjectData(); // อัปเดต Array ปัจจุบันก่อน
-            if (CLOUD_API_URL.includes("ใส่_URL_ที่ได้จาก")) {
-                alert("⚠️ ตอนนี้ระบบกำลัง 'เซฟในเครื่อง' ให้คุณอย่างปลอดภัยแบบ Real-time แล้วครับ! แต่ถ้าต้องการใช้ระบบ 'เซฟออนไลน์ข้ามเครื่อง' ด้วย คุณต้องนำ URL จาก Google Apps Script มาใส่ในโค้ดตรงช่อง CLOUD_API_URL ก่อนนะครับ");
+            saveCurrentProjectData(); // Update the current array first
+            if (CLOUD_API_URL.includes("INSERT_SCRIPT_URL_HERE")) {
+                alert("⚠️ Your data is already being saved locally in real-time! To enable cross-device cloud sync, please insert your Google Apps Script URL into the CLOUD_API_URL variable.");
                 return;
             }
 
             const syncBtn = document.getElementById('cloudSyncBtn');
-            if (syncBtn) syncBtn.innerText = "⏳ กำลังส่งข้อมูลขึ้น Cloud...";
+            if (syncBtn) syncBtn.innerText = "⏳ Uploading to Cloud...";
 
             fetch(CLOUD_API_URL, {
                 method: "POST",
@@ -6003,26 +6003,26 @@
                 .then(res => res.json())
                 .then(result => {
                     if (result.status === "success") {
-                        alert("☁️ เซฟข้อมูลไปที่ Google Drive ออนไลน์เรียบร้อยแล้วครับ!");
+                        alert("☁️ Data saved to Google Drive successfully!");
                     } else {
-                        alert("❌ เซฟออนไลน์ไม่สำเร็จ: " + result.message);
+                        alert("❌ Cloud save failed: " + result.message);
                     }
                 })
                 .catch(err => {
-                    alert("❌ เกิดข้อผิดพลาดในการเชื่อมต่อเซิร์ฟเวอร์ออนไลน์");
+                    alert("❌ Failed to connect to the online server.");
                     console.error(err);
                 })
                 .finally(() => {
-                    if (syncBtn) syncBtn.innerText = "☁️ เซฟออนไลน์";
+                    if (syncBtn) syncBtn.innerText = "☁️ Save Online";
                 });
         }
 
         function loadFromCloud() {
-            if (CLOUD_API_URL.includes("ใส่_URL_ที่ได้จาก")) {
-                alert("⚠️ กรุณานำ URL จาก Google Apps Script มาใส่ในโค้ดก่อนใช้งานครับ");
+            if (CLOUD_API_URL.includes("INSERT_SCRIPT_URL_HERE")) {
+                alert("⚠️ Please set the Google Apps Script URL in the CLOUD_API_URL variable before using this feature.");
                 return;
             }
-            if (!confirm("ต้องการดึงงานเวอร์ชันล่าสุดจาก Cloud ใช่ไหม? งานที่อยู่บนหน้าจอเครื่องนี้จะถูกเขียนทับด้วยข้อมูลจากออนไลน์นะ")) return;
+            if (!confirm("Load the latest version from Cloud? This will overwrite any unsaved local work.")) return;
 
             fetch(CLOUD_API_URL)
                 .then(res => res.json())
@@ -6039,19 +6039,20 @@
                             const firstItem = document.querySelector('.project-item');
                             if (firstItem) firstItem.click();
                         }, 100);
-                        alert("📂 ดึงข้อมูลงานจาก Cloud กลับมาทำต่อสำเร็จแล้ว!");
+                        alert("📂 Data loaded from Cloud successfully!");
                     } else {
-                        alert("📭 ไม่พบไฟล์เซฟบน Cloud หรือไฟล์ออนไลน์ยังว่างอยู่ครับ");
+                        alert("📭 No save file found on Cloud, or the cloud file is empty.");
                     }
                 })
                 .catch(err => {
-                    alert("❌ ดึงงานออนไลน์ไม่สำเร็จ");
+                    alert("❌ Failed to load data from Cloud.");
                     console.error(err);
                 });
         }
 
-        // [5] --- ระบบฝังปุ่มเซฟออนไลน์ขึ้นหน้าจออัตโนมัติ ---
-        // ทริกนี้ทำให้คุณไม่ต้องไปนั่งหาจุดวางปุ่มในแท็ก HTML ให้งง โค้ดส่วนนี้จะทำหน้าที่สร้างปุ่มโผล่ขึ้นมาที่หัวเมนูซ้ายมือให้เองเลยครับ!
+        // [5] --- Auto-inject cloud save buttons into the sidebar header ---
+        // This removes the need to manually place buttons in the HTML.
+        // The code dynamically creates and inserts them at the top of the left sidebar.
         (function injectCloudButtons() {
             const checkHeader = setInterval(() => {
                 const sidebarHeader = document.querySelector('.sidebar-header');
@@ -6066,9 +6067,9 @@
                     cloudContainer.style.boxSizing = 'border-box';
 
                     cloudContainer.innerHTML = `
-                                            <button id="cloudSyncBtn" onclick="saveToCloud()" style="flex:1; background: #2383E2; color: white; border: none; padding: 6px 4px; border-radius: 4px; cursor: pointer; font-size: 11px; font-weight: bold; transition: opacity 0.15s;">☁️ เซฟออนไลน์</button>
-                                            <button onclick="loadFromCloud()" style="flex:1; background: #2f2f2f; color: var(--text-color); border: 1px solid var(--border-color); padding: 6px 4px; border-radius: 4px; cursor: pointer; font-size: 11px; font-weight: bold; transition: opacity 0.15s;">📂 ดึงจาก Cloud</button>
-                                        `;
+                                                <button id="cloudSyncBtn" onclick="saveToCloud()" style="flex:1; background: #2383E2; color: white; border: none; padding: 6px 4px; border-radius: 4px; cursor: pointer; font-size: 11px; font-weight: bold; transition: opacity 0.15s;">☁️ Save Online</button>
+                                                <button onclick="loadFromCloud()" style="flex:1; background: #2f2f2f; color: var(--text-color); border: 1px solid var(--border-color); padding: 6px 4px; border-radius: 4px; cursor: pointer; font-size: 11px; font-weight: bold; transition: opacity 0.15s;">📂 Load from Cloud</button>
+                                            `;
 
                     sidebarHeader.style.flexDirection = 'column';
                     sidebarHeader.style.alignItems = 'flex-start';
@@ -6079,7 +6080,7 @@
         })();
 
         // ====================================================================
-        //  ระบบ Zoom อิสระ สำหรับ Timeline / Graph / Table (ปุ่ม +/- และ Pinch)
+        //  Independent Zoom System for Timeline / Graph / Table (buttons +/- and Pinch)
         // ====================================================================
         (function setupViewZoom() {
             // Map: containerId → current scale
@@ -6090,14 +6091,14 @@
             };
             const MAX_SCALE = 3;
 
-            // คำนวณ MIN_SCALE สำหรับ container นั้นๆ
-            // บนมือถือ: ซูมออกได้แค่พอดีที่เนื้อหาเต็มความกว้างจอ
-            // บน desktop: ใช้ค่าคงที่ 0.25 เหมือนเดิม
+            // Calculate MIN_SCALE for a given container.
+            // On mobile: zoom out only until content fills the full screen width.
+            // On desktop: use a fixed value of 0.25.
             function getMinScale(container, inner) {
                 const isMobile = window.matchMedia('(max-width: 768px)').matches;
                 if (!isMobile) return 0.25;
                 const containerW = container.clientWidth || window.innerWidth;
-                // รีเซ็ต transform ชั่วคราวเพื่อวัดขนาดจริง (scrollWidth ไม่นับ transform)
+                // Temporarily reset transform to measure natural size (scrollWidth ignores transform)
                 const prevTransform = inner.style.transform;
                 const prevWidth = inner.style.width;
                 inner.style.transform = 'none';
@@ -6118,7 +6119,7 @@
 
                 const isMobile = window.matchMedia('(max-width: 768px)').matches;
 
-                // บนมือถือ anchor ที่ซ้ายบน เพื่อไม่ให้ header หลุดออกนอกจอซ้าย
+                // On mobile, anchor to top-left so the header doesn't drift off-screen to the left
                 inner.style.transformOrigin = isMobile ? 'top left' : 'top center';
 
                 const minScale = getMinScale(container, inner);
@@ -6126,13 +6127,13 @@
                 zoomState[containerId] = scale;
                 inner.style.transform = `scale(${scale})`;
 
-                // ปรับ height ของ container ให้พอดีกับ content ที่ scale ลงมาแล้ว
+                // Adjust container height to match the scaled content height
                 const scaledHeight = inner.scrollHeight * scale;
                 container.style.minHeight = scaledHeight > 0 ? scaledHeight + 'px' : '';
                 inner.style.marginBottom = '';
 
-                // บนมือถือ: ปรับ width ของ inner ให้พอดจอหลัง scale
-                // เพื่อไม่ให้มีพื้นที่ว่างด้านขวา
+                // On mobile: adjust inner width to fit the screen after scaling
+                // to avoid empty space on the right
                 if (isMobile) {
                     const containerW = container.clientWidth || window.innerWidth;
                     inner.style.width = (containerW / scale) + 'px';
