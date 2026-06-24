@@ -6102,10 +6102,14 @@
                 const isMobile = window.matchMedia('(max-width: 768px)').matches;
                 if (!isMobile) return 0.25;
                 const containerW = container.clientWidth || window.innerWidth;
+                // reset width ชั่วคราวเพื่อวัด scrollWidth ที่แท้ ไม่ใช้ค่าที่เคยถูกเซ็ตไว้ก่อน
+                const prevWidth = inner.style.width;
+                inner.style.width = '';
                 const contentW = inner.scrollWidth;
-                if (!contentW || contentW <= containerW) return 0.5;
-                // คำนวณ scale ให้เนื้อหาพอดีจอพอดี (หัก 5% เผื่อ padding)
-                const fitScale = (containerW / contentW) * 0.95;
+                inner.style.width = prevWidth;
+                if (!contentW || contentW <= containerW) return 1;
+                // คำนวณ scale ให้เนื้อหาพอดีจอพอดี
+                const fitScale = containerW / contentW;
                 return Math.max(0.3, fitScale);
             }
 
