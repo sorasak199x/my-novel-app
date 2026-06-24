@@ -6125,13 +6125,21 @@
                 scale = Math.min(MAX_SCALE, Math.max(minScale, scale));
                 zoomState[containerId] = scale;
                 inner.style.transform = `scale(${scale})`;
-                // Adjust container min-height so scrolling works correctly after scale
-                // When scale < 1, the element shrinks visually but still occupies original space.
-                // We set a min-height on the container to match the scaled visual height.
+
+                // ปรับ height ของ container ให้พอดีกับ content ที่ scale ลงมาแล้ว
                 const scaledHeight = inner.scrollHeight * scale;
                 container.style.minHeight = scaledHeight > 0 ? scaledHeight + 'px' : '';
-                // Reset the inner marginBottom (not needed with container minHeight approach)
                 inner.style.marginBottom = '';
+
+                // บนมือถือ: ปรับ width ของ inner ให้พอดจอหลัง scale
+                // เพื่อไม่ให้มีพื้นที่ว่างด้านขวา
+                if (isMobile) {
+                    const containerW = container.clientWidth || window.innerWidth;
+                    inner.style.width = (containerW / scale) + 'px';
+                } else {
+                    inner.style.width = '';
+                }
+
                 // Update label on the reset button
                 const resetBtn = container.querySelector('.view-zoom-btn[style*="font-size:12px"]');
                 if (resetBtn) resetBtn.textContent = Math.round(scale * 100) + '%';
