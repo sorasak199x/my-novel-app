@@ -2917,19 +2917,40 @@
         let coverDragStartY = 0;
         let currentCoverPosY = 50;
 
+        // ====== Cloudinary Upload Config ======
+        const CLOUDINARY_CLOUD_NAME = 'dhk2fwdxm';
+        const CLOUDINARY_UPLOAD_PRESET = 'mnhe2yzj';
+
+        async function uploadToCloudinary(file) {
+            const formData = new FormData();
+            formData.append('file', file);
+            formData.append('upload_preset', CLOUDINARY_UPLOAD_PRESET);
+            const resourceType = file.type.startsWith('video') ? 'video' : 'image';
+            const res = await fetch(`https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/${resourceType}/upload`, {
+                method: 'POST',
+                body: formData
+            });
+            if (!res.ok) throw new Error('Cloudinary upload failed');
+            const data = await res.json();
+            return data.secure_url;
+        }
+
         function changeCover(event) {
             const file = event.target.files[0];
             if (file) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    const base64url = e.target.result;
-                    document.getElementById('coverContainer').style.backgroundImage = `url(${base64url})`;
-                    document.getElementById('coverContainer').style.backgroundPosition = `center 50%`;
+                const coverContainer = document.getElementById('coverContainer');
+                coverContainer.style.opacity = '0.5';
+                uploadToCloudinary(file).then(url => {
+                    coverContainer.style.backgroundImage = `url(${url})`;
+                    coverContainer.style.backgroundPosition = `center 50%`;
+                    coverContainer.style.opacity = '1';
                     currentCoverPosY = 50;
                     saveCurrentProjectData();
                     startRepositionCover();
-                };
-                reader.readAsDataURL(file);
+                }).catch(() => {
+                    coverContainer.style.opacity = '1';
+                    alert('❌ อัพโหลด Cover ไม่สำเร็จ กรุณาลองใหม่');
+                });
             }
         }
 
@@ -2982,14 +3003,17 @@
         function changeIcon(event) {
             const file = event.target.files[0];
             if (file) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    const base64url = e.target.result;
-                    document.getElementById('iconDisplay').innerHTML = `<img src="${base64url}" alt="icon">`;
+                const iconDisplay = document.getElementById('iconDisplay');
+                iconDisplay.style.opacity = '0.5';
+                uploadToCloudinary(file).then(url => {
+                    iconDisplay.innerHTML = `<img src="${url}" alt="icon">`;
+                    iconDisplay.style.opacity = '1';
                     saveCurrentProjectData();
                     renderProjectList();
-                };
-                reader.readAsDataURL(file);
+                }).catch(() => {
+                    iconDisplay.style.opacity = '1';
+                    alert('❌ อัพโหลด Icon ไม่สำเร็จ กรุณาลองใหม่');
+                });
             }
         }
 
@@ -3651,27 +3675,32 @@
             if (!file) return;
             saveState();
 
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                const base64url = e.target.result;
+            // Show loading indicator
+            const loadingBlock = createBlockElement('text');
+            const loadingContent = loadingBlock.querySelector('.block-content');
+            loadingContent.innerHTML = `<em style="color:var(--text-muted)">⏳ กำลังอัพโหลด...</em>`;
+            loadingContent.setAttribute('contenteditable', 'false');
+            if (isGhostActive) {
+                const ghost = document.getElementById('ghostAddBlock');
+                ghost.insertAdjacentElement('beforebegin', loadingBlock);
+            } else if (currentActiveBlock) {
+                currentActiveBlock.insertAdjacentElement('afterend', loadingBlock);
+            }
+
+            uploadToCloudinary(file).then(url => {
                 const newBlock = createBlockElement(type);
                 const contentDiv = newBlock.querySelector('.block-content');
-
-                if (type === 'image') contentDiv.innerHTML = `<img src="${base64url}" class="media-block" alt="Image">`;
-                else if (type === 'video') contentDiv.innerHTML = `<video src="${base64url}" class="media-block" controls></video>`;
-
-                if (isGhostActive) {
-                    const ghost = document.getElementById('ghostAddBlock');
-                    ghost.insertAdjacentElement('beforebegin', newBlock);
-                } else if (currentActiveBlock) {
-                    currentActiveBlock.insertAdjacentElement('afterend', newBlock);
-                }
-
+                if (type === 'image') contentDiv.innerHTML = `<img src="${url}" class="media-block" alt="Image">`;
+                else if (type === 'video') contentDiv.innerHTML = `<video src="${url}" class="media-block" controls></video>`;
+                loadingBlock.replaceWith(newBlock);
                 appendGhostBlock();
                 saveState();
                 saveCurrentProjectData();
-            };
-            reader.readAsDataURL(file);
+            }).catch(() => {
+                loadingBlock.remove();
+                alert('❌ อัพโหลดไฟล์ไม่สำเร็จ กรุณาลองใหม่');
+            });
+
             event.target.value = '';
         }
 
