@@ -2920,12 +2920,16 @@
         function changeCover(event) {
             const file = event.target.files[0];
             if (file) {
-                const url = URL.createObjectURL(file);
-                document.getElementById('coverContainer').style.backgroundImage = `url(${url})`;
-                document.getElementById('coverContainer').style.backgroundPosition = `center 50%`;
-                currentCoverPosY = 50;
-                saveCurrentProjectData();
-                startRepositionCover();
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const base64url = e.target.result;
+                    document.getElementById('coverContainer').style.backgroundImage = `url(${base64url})`;
+                    document.getElementById('coverContainer').style.backgroundPosition = `center 50%`;
+                    currentCoverPosY = 50;
+                    saveCurrentProjectData();
+                    startRepositionCover();
+                };
+                reader.readAsDataURL(file);
             }
         }
 
@@ -2978,9 +2982,14 @@
         function changeIcon(event) {
             const file = event.target.files[0];
             if (file) {
-                document.getElementById('iconDisplay').innerHTML = `<img src="${URL.createObjectURL(file)}" alt="icon">`;
-                saveCurrentProjectData();
-                renderProjectList();
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const base64url = e.target.result;
+                    document.getElementById('iconDisplay').innerHTML = `<img src="${base64url}" alt="icon">`;
+                    saveCurrentProjectData();
+                    renderProjectList();
+                };
+                reader.readAsDataURL(file);
             }
         }
 
@@ -3642,23 +3651,28 @@
             if (!file) return;
             saveState();
 
-            const url = URL.createObjectURL(file);
-            const newBlock = createBlockElement(type);
-            const contentDiv = newBlock.querySelector('.block-content');
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const base64url = e.target.result;
+                const newBlock = createBlockElement(type);
+                const contentDiv = newBlock.querySelector('.block-content');
 
-            if (type === 'image') contentDiv.innerHTML = `<img src="${url}" class="media-block" alt="Image">`;
-            else if (type === 'video') contentDiv.innerHTML = `<video src="${url}" class="media-block" controls></video>`;
+                if (type === 'image') contentDiv.innerHTML = `<img src="${base64url}" class="media-block" alt="Image">`;
+                else if (type === 'video') contentDiv.innerHTML = `<video src="${base64url}" class="media-block" controls></video>`;
 
-            if (isGhostActive) {
-                const ghost = document.getElementById('ghostAddBlock');
-                ghost.insertAdjacentElement('beforebegin', newBlock);
-            } else if (currentActiveBlock) {
-                currentActiveBlock.insertAdjacentElement('afterend', newBlock);
-            }
+                if (isGhostActive) {
+                    const ghost = document.getElementById('ghostAddBlock');
+                    ghost.insertAdjacentElement('beforebegin', newBlock);
+                } else if (currentActiveBlock) {
+                    currentActiveBlock.insertAdjacentElement('afterend', newBlock);
+                }
 
-            appendGhostBlock();
+                appendGhostBlock();
+                saveState();
+                saveCurrentProjectData();
+            };
+            reader.readAsDataURL(file);
             event.target.value = '';
-            saveState();
         }
 
         /* ==========================================
