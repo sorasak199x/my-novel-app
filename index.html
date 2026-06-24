@@ -6105,8 +6105,23 @@
                 graphViewContainer: 1,
                 tableViewContainer: 1
             };
-            const MIN_SCALE = 0.25;
             const MAX_SCALE = 3;
+
+            // คำนวณ MIN_SCALE สำหรับ container นั้นๆ
+            // บนมือถือ: ซูมออกได้แค่พอดีที่เนื้อหาเต็มความกว้างจอ
+            // บน desktop: ใช้ค่าคงที่ 0.25 เหมือนเดิม
+            function getMinScale(container, inner) {
+                const isMobile = window.matchMedia('(max-width: 768px)').matches;
+                if (!isMobile) return 0.25;
+                // ใช้ scrollWidth ของ inner ก่อน reset transform เพื่อรู้ขนาดจริง
+                const containerW = container.clientWidth || window.innerWidth;
+                const contentW = inner.scrollWidth;
+                if (!contentW || contentW <= containerW) return 0.5; // ถ้าเนื้อหาแคบกว่าจอ ซูมออกได้แค่ 50%
+                // คำนวณสเกลที่ทำให้เนื้อหาพอดีกับจอพอดี
+                const fitScale = containerW / contentW;
+                // ป้องกันไม่ให้เล็กเกินไป (ไม่น้อยกว่า 0.3)
+                return Math.max(0.3, fitScale);
+            }
 
             // Apply scale to the first child wrapper inside the container
             function applyZoom(containerId, scale) {
@@ -6114,9 +6129,15 @@
                 if (!container) return;
                 const inner = container.querySelector('.timeline-wrapper, .graph-wrapper, .table-wrapper');
                 if (!inner) return;
-                scale = Math.min(MAX_SCALE, Math.max(MIN_SCALE, scale));
+
+                const isMobile = window.matchMedia('(max-width: 768px)').matches;
+
+                // บนมือถือ anchor ที่ซ้ายบน เพื่อไม่ให้ header หลุดออกนอกจอซ้าย
+                inner.style.transformOrigin = isMobile ? 'top left' : 'top center';
+
+                const minScale = getMinScale(container, inner);
+                scale = Math.min(MAX_SCALE, Math.max(minScale, scale));
                 zoomState[containerId] = scale;
-                inner.style.transformOrigin = 'top center';
                 inner.style.transform = `scale(${scale})`;
                 // Adjust wrapper min-height so scrolling still works after scale-down
                 inner.style.marginBottom = `${(scale - 1) * inner.offsetHeight}px`;
