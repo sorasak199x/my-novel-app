@@ -6117,8 +6117,9 @@
                 const containerW = container.clientWidth || window.innerWidth;
                 const contentW = inner.scrollWidth;
                 if (!contentW || contentW <= containerW) return 0.5; // ถ้าเนื้อหาแคบกว่าจอ ซูมออกได้แค่ 50%
-                // คำนวณสเกลที่ทำให้เนื้อหาพอดีกับจอพอดี
-                const fitScale = containerW / contentW;
+                // คำนวณสเกลที่ทำให้เนื้อหาพอดีกับจอพอดี แล้วหักออก 10%
+                // เพื่อให้ซูมออกได้กว้างกว่ากรอบสัก 10% ก่อนหยุด
+                const fitScale = (containerW / contentW) * 0.9;
                 // ป้องกันไม่ให้เล็กเกินไป (ไม่น้อยกว่า 0.3)
                 return Math.max(0.3, fitScale);
             }
