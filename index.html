@@ -6102,15 +6102,16 @@
                 const isMobile = window.matchMedia('(max-width: 768px)').matches;
                 if (!isMobile) return 0.25;
                 const containerW = container.clientWidth || window.innerWidth;
-                // reset width ชั่วคราวเพื่อวัด scrollWidth ที่แท้ ไม่ใช้ค่าที่เคยถูกเซ็ตไว้ก่อน
+                // รีเซ็ต transform ชั่วคราวเพื่อวัดขนาดจริง (scrollWidth ไม่นับ transform)
+                const prevTransform = inner.style.transform;
                 const prevWidth = inner.style.width;
+                inner.style.transform = 'none';
                 inner.style.width = '';
                 const contentW = inner.scrollWidth;
+                inner.style.transform = prevTransform;
                 inner.style.width = prevWidth;
                 if (!contentW || contentW <= containerW) return 1;
-                // คำนวณ scale ให้เนื้อหาพอดีจอพอดี
-                const fitScale = containerW / contentW;
-                return Math.max(0.3, fitScale);
+                return Math.max(0.3, containerW / contentW);
             }
 
             // Apply scale to the first child wrapper inside the container
