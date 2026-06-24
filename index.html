@@ -2038,31 +2038,23 @@
 
             .graph-wrapper, .table-wrapper {
                 padding: 24px 16px;
+                /* These tools (table/graph) are allowed to overflow
+                   horizontally on narrow screens instead of being
+                   squeezed to fit — the user scrolls sideways to
+                   see the rest. The wrapper itself owns the scroll
+                   so the rest of the page never gets dragged along. */
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+            }
+
+            .graph-body {
+                flex-wrap: nowrap;
             }
 
             .table-grid-wrap {
                 max-width: 100%;
                 overflow-x: auto;
                 -webkit-overflow-scrolling: touch;
-            }
-
-            .graph-body {
-                gap: 16px;
-            }
-
-            .graph-data-panel {
-                width: 100%;
-                max-width: 100%;
-            }
-
-            .graph-data-header,
-            .graph-row {
-                grid-template-columns: 1fr 70px 32px 24px;
-            }
-
-            .graph-canvas-panel {
-                width: 100%;
-                min-width: 0;
             }
 
             /* --- Fix: text/content overflowing the screen on mobile --- */
