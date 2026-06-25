@@ -6416,9 +6416,20 @@
         }
 
         // ----------------------------------------------------------------
-        //  beforeunload — fires on real tab/window close (browser-native dialog)
-        //  Browsers don't allow custom UI here, but we still block the close.
+        //  Show custom modal the moment the user leaves the tab (hidden).
+        //  Auto-dismiss it if the user comes back without closing.
+        //  beforeunload is a safety net for hard tab/window closes.
         // ----------------------------------------------------------------
+        document.addEventListener('visibilitychange', function () {
+            if (document.visibilityState === 'hidden' && _hasUnsyncedChanges()) {
+                _showUnsavedModal(function () { });
+            } else if (document.visibilityState === 'visible') {
+                // User came back — hide the modal if it's still open
+                _hideUnsavedModal();
+            }
+        });
+
+        // beforeunload: safety net for hard closes (browser shows its own native text).
         window.addEventListener('beforeunload', function (e) {
             if (_hasUnsyncedChanges()) {
                 const msg = 'You have changes that haven\'t been saved to the cloud yet.';
