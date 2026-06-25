@@ -1349,6 +1349,8 @@
                 .graph-body.horizontal-mode .graph-canvas-panel {
                     width: 100%;
                     min-height: 300px;
+                    align-items: flex-start;
+                    justify-content: flex-start;
                 }
 
         .graph-data-panel {
@@ -1429,6 +1431,8 @@
             align-items: center;
             justify-content: center;
             min-height: 440px;
+            overflow: hidden;
+            box-sizing: border-box;
         }
 
         #graphCanvas {
@@ -4637,7 +4641,7 @@
                                                                                                                                     </div>
                                                                                                                                     <div id="${rowsId}"></div>
                                                                                                                                 </div>
-                                                                                                                                <div class="graph-canvas-panel" style="min-height:380px;">
+                                                                                                                                <div class="graph-canvas-panel">
                                                                                                                                     <canvas id="${canvasId}"></canvas>
                                                                                                                                 </div>
                                                                                                                             </div>
@@ -4720,7 +4724,9 @@
             }
 
             const panel = canvas.closest('.graph-canvas-panel');
-            const cssWidth = Math.max(280, panel ? panel.clientWidth - 48 : 480);
+            const panelPadding = 48; // 24px left + 24px right
+            const cssWidth = Math.max(280, panel ? panel.clientWidth - panelPadding : 480);
+            canvas.style.maxWidth = '100%';
             const rows = Array.from(card.querySelectorAll('.graph-row'));
             const data = rows.map(r => ({
                 label: r.querySelector('.graph-label-input').value || '',
