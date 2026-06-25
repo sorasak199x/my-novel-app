@@ -3002,6 +3002,43 @@
             return siblings.length + 1;
         }
 
+        /* ----- New: Trash auto-expiry (30 days) -----
+           Items moved to Trash now record a `deletedAt` timestamp. Any item that
+           has been sitting in Trash for longer than TRASH_RETENTION_DAYS gets
+           permanently removed automatically. Items already in Trash from before
+           this feature existed (no deletedAt yet) get their clock started now,
+           rather than being deleted immediately on the next check. ----- */
+        const TRASH_RETENTION_DAYS = 30;
+        const TRASH_RETENTION_MS = TRASH_RETENTION_DAYS * 24 * 60 * 60 * 1000;
+
+        function purgeExpiredTrash() {
+            const now = Date.now();
+            let changed = false;
+
+            projects.forEach(p => {
+                if (p.isDeleted && !p.deletedAt) {
+                    p.deletedAt = now;
+                    changed = true;
+                }
+            });
+
+            const beforeCount = projects.length;
+            projects = projects.filter(p => !(p.isDeleted && p.deletedAt && (now - p.deletedAt) > TRASH_RETENTION_MS));
+            if (projects.length !== beforeCount) changed = true;
+
+            if (changed) {
+                // Persist directly (not via saveCurrentProjectData, which no-ops
+                // when there's no active currentProjectId, e.g. while viewing Trash)
+                localStorage.setItem('my_novel_database', JSON.stringify(projects));
+            }
+        }
+
+        function getTrashDaysLeft(proj) {
+            if (!proj.deletedAt) return TRASH_RETENTION_DAYS;
+            const msLeft = TRASH_RETENTION_MS - (Date.now() - proj.deletedAt);
+            return Math.max(0, Math.ceil(msLeft / (24 * 60 * 60 * 1000)));
+        }
+
         function toggleProjectChildren(e, projId) {
             e.stopPropagation();
             if (collapsedProjects.has(projId)) collapsedProjects.delete(projId);
@@ -3356,6 +3393,7 @@
         function renderTrashList() {
             const list = document.getElementById('gmailTrashList');
             if (!list) return;
+            purgeExpiredTrash();
             list.innerHTML = '';
             const trashed = projects.filter(p => p.isDeleted);
             if (trashed.length === 0) {
@@ -3373,10 +3411,15 @@
                 item.style.borderRadius = '8px';
 
                 let iconText = proj.iconHtml.includes('<img') ? '🖼️' : proj.iconHtml;
+                const daysLeft = getTrashDaysLeft(proj);
+                const daysLeftText = daysLeft <= 1 ? 'Will be permanently deleted within 1 day' : `Will be permanently deleted in ${daysLeft} days`;
                 item.innerHTML = `
                                                                                                                                                         <div style="display: flex; align-items: center; gap: 15px; overflow: hidden;">
                                                                                                                                                             <span style="font-size: 24px; flex-shrink: 0;">${iconText}</span>
-                                                                                                                                                            <span style="font-weight: bold; font-size: 16px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${proj.title.replace(/<[^>]*>?/gm, '').trim() || "Untitled"}</span>
+                                                                                                                                                            <div style="display: flex; flex-direction: column; overflow: hidden; min-width: 0;">
+                                                                                                                                                                <span style="font-weight: bold; font-size: 16px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${proj.title.replace(/<[^>]*>?/gm, '').trim() || "Untitled"}</span>
+                                                                                                                                                                <span style="font-size: 12px; color: var(--text-muted); margin-top: 2px;">${daysLeftText}</span>
+                                                                                                                                                            </div>
                                                                                                                                                         </div>
                                                                                                                                                         <div style="display: flex; gap: 10px; flex-shrink: 0;">
                                                                                                                                                             <button onclick="restoreProject(${proj.id}, event)" style="padding: 8px 16px; background: var(--hover-bg); color: var(--text-color); border: 1px solid var(--border-color); border-radius: 6px; cursor: pointer; font-size: 14px; transition: background 0.2s;" onmouseover="this.style.background='rgba(255,255,255,0.1)'" onmouseout="this.style.background='var(--hover-bg)'">Restore</button>
@@ -3444,6 +3487,7 @@
             const proj = projects.find(p => p.id === activeMenuProjectId);
             if (!proj) return;
             proj.isDeleted = true;
+            proj.deletedAt = Date.now();
 
             if (proj.id === currentProjectId) {
                 const remaining = projects.filter(p => !p.isDeleted);
@@ -3464,6 +3508,7 @@
             const proj = projects.find(p => p.id === projId);
             if (proj) {
                 proj.isDeleted = false;
+                proj.deletedAt = null;
                 renderProjectList();
             }
         }
