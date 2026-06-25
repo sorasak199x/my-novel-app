@@ -1,1 +1,0 @@
-const CLOUD_API_URL = "https://script.google.com/macros/s/AKfycbyaIQ1IvgSO9QHwS7oEwS03JRj9Pf8mHK9EuUVB-q_EJtvNdt7qyK19uoRxgl1wa1hi/exec";
