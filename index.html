@@ -2410,6 +2410,122 @@
                 font-size: 18px;
             }
         }
+        /* ==========================================
+           Unsaved Cloud Changes Modal
+           ========================================== */
+        #unsavedModal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            z-index: 99999;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0, 0, 0, 0.65);
+            backdrop-filter: blur(3px);
+            -webkit-backdrop-filter: blur(3px);
+            font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol";
+        }
+
+            #unsavedModal.active {
+                display: flex;
+            }
+
+        .unsaved-modal-box {
+            background: #1f1f1f;
+            border: 1px solid #3a3a3a;
+            border-radius: 10px;
+            padding: 28px 28px 22px;
+            max-width: 400px;
+            width: calc(100% - 40px);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.7);
+            animation: modalIn 0.18s ease;
+        }
+
+        @keyframes modalIn {
+            from {
+                opacity: 0;
+                transform: scale(0.96) translateY(6px);
+            }
+
+            to {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
+        }
+
+        .unsaved-modal-icon {
+            font-size: 28px;
+            margin-bottom: 12px;
+        }
+
+        .unsaved-modal-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #EBEBEB;
+            margin-bottom: 8px;
+            line-height: 1.3;
+        }
+
+        .unsaved-modal-desc {
+            font-size: 13.5px;
+            color: rgba(255,255,255,0.5);
+            line-height: 1.6;
+            margin-bottom: 22px;
+        }
+
+        .unsaved-modal-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .unsaved-modal-btn {
+            width: 100%;
+            padding: 9px 16px;
+            border-radius: 6px;
+            font-size: 13.5px;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+            transition: opacity 0.15s, background 0.15s;
+            font-family: inherit;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 7px;
+        }
+
+            .unsaved-modal-btn:hover {
+                opacity: 0.88;
+            }
+
+            .unsaved-modal-btn.primary {
+                background: #2383E2;
+                color: #fff;
+            }
+
+            .unsaved-modal-btn.secondary {
+                background: #2f2f2f;
+                color: #EBEBEB;
+                border: 1px solid #3a3a3a;
+            }
+
+            .unsaved-modal-btn.danger {
+                background: transparent;
+                color: rgba(255,255,255,0.35);
+                font-weight: 400;
+                font-size: 12.5px;
+            }
+
+                .unsaved-modal-btn.danger:hover {
+                    color: #eb5757;
+                    opacity: 1;
+                }
+
+            .unsaved-modal-btn:disabled {
+                opacity: 0.5;
+                cursor: not-allowed;
+            }
     </style>
 </head>
 <body>
@@ -6232,12 +6348,82 @@
             return JSON.stringify(projects) !== _cloudSnapshot;
         }
 
-        // Warn before the tab/window closes if there is unsynced work
+        // ----------------------------------------------------------------
+        //  Custom Modal — shown for in-page navigation / programmatic calls
+        //  The modal gives the user a "Save to Cloud & Leave" button.
+        // ----------------------------------------------------------------
+        let _unsavedModalCallback = null; // called with true=leave, false=stay
+
+        function _showUnsavedModal(onDecision) {
+            _unsavedModalCallback = onDecision;
+            const modal = document.getElementById('unsavedModal');
+            if (modal) modal.classList.add('active');
+        }
+
+        function _hideUnsavedModal() {
+            const modal = document.getElementById('unsavedModal');
+            if (modal) modal.classList.remove('active');
+            _unsavedModalCallback = null;
+        }
+
+        function _unsavedModalStay() {
+            _hideUnsavedModal();
+            if (_unsavedModalCallback) _unsavedModalCallback(false);
+        }
+
+        function _unsavedModalLeave() {
+            _hideUnsavedModal();
+            if (_unsavedModalCallback) _unsavedModalCallback(true);
+        }
+
+        function _unsavedModalSaveAndClose() {
+            const btn = document.getElementById('unsavedModalSaveBtn');
+            if (btn) { btn.disabled = true; btn.textContent = '⏳ Uploading…'; }
+
+            // Reuse the existing saveToCloud logic but intercept the result
+            saveCurrentProjectData();
+            if (CLOUD_API_URL.includes("INSERT_SCRIPT_URL_HERE")) {
+                // No cloud configured — just close the modal and stay
+                if (btn) { btn.disabled = false; btn.innerHTML = '☁️ Save to Cloud &amp; Leave'; }
+                alert("⚠️ No cloud URL configured. Please set CLOUD_API_URL first.");
+                _hideUnsavedModal();
+                return;
+            }
+
+            const urlWithToken = CLOUD_API_URL + "?token=" + encodeURIComponent(CLOUD_SECRET_TOKEN);
+            fetch(urlWithToken, {
+                method: "POST",
+                body: JSON.stringify(projects),
+                headers: { "Content-Type": "text/plain" }
+            })
+                .then(res => res.json())
+                .then(result => {
+                    if (result.status === "success") {
+                        _cloudSynced = true;
+                        _takeCloudSnapshot();
+                        _hideUnsavedModal();
+                        if (_unsavedModalCallback) _unsavedModalCallback(true);
+                    } else {
+                        alert("❌ Cloud save failed: " + result.message);
+                        if (btn) { btn.disabled = false; btn.innerHTML = '☁️ Save to Cloud &amp; Leave'; }
+                    }
+                })
+                .catch(err => {
+                    alert("❌ Failed to connect to the online server.");
+                    console.error(err);
+                    if (btn) { btn.disabled = false; btn.innerHTML = '☁️ Save to Cloud &amp; Leave'; }
+                });
+        }
+
+        // ----------------------------------------------------------------
+        //  beforeunload — fires on real tab/window close (browser-native dialog)
+        //  Browsers don't allow custom UI here, but we still block the close.
+        // ----------------------------------------------------------------
         window.addEventListener('beforeunload', function (e) {
             if (_hasUnsyncedChanges()) {
-                const msg = 'You have changes that haven\'t been saved to the cloud yet. If you close now, your work will remain saved locally but won\'t be synced online.';
+                const msg = 'You have changes that haven\'t been saved to the cloud yet.';
                 e.preventDefault();
-                e.returnValue = msg; // Required for most browsers
+                e.returnValue = msg;
                 return msg;
             }
         });
@@ -6483,5 +6669,28 @@
         })();
 
     </script>
+    <!-- Unsaved Cloud Changes Modal -->
+    <div id="unsavedModal" role="dialog" aria-modal="true" aria-labelledby="unsavedModalTitle">
+        <div class="unsaved-modal-box">
+            <div class="unsaved-modal-icon">☁️</div>
+            <div class="unsaved-modal-title" id="unsavedModalTitle">Unsaved cloud changes</div>
+            <div class="unsaved-modal-desc">
+                You have changes that haven't been uploaded to the cloud yet.<br>
+                Your work is saved locally, but won't be synced across devices until you save online.
+            </div>
+            <div class="unsaved-modal-actions">
+                <button class="unsaved-modal-btn primary" id="unsavedModalSaveBtn" onclick="_unsavedModalSaveAndClose()">
+                    ☁️ Save to Cloud &amp; Leave
+                </button>
+                <button class="unsaved-modal-btn secondary" onclick="_unsavedModalStay()">
+                    ↩ Stay on Page
+                </button>
+                <button class="unsaved-modal-btn danger" onclick="_unsavedModalLeave()">
+                    Leave without saving
+                </button>
+            </div>
+        </div>
+    </div>
+
 </body>
 </html>
