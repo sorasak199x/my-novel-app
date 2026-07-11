@@ -4577,28 +4577,17 @@
             }
 
             if (e.key === 'Enter') {
-                const parentChildren = currentRow.parentElement;
-                const isChildBlock = parentChildren && parentChildren.classList.contains('block-children');
-
-                if (isChildBlock) {
-                    // This block is nested (a child) under another block.
-                    // Plain Enter now just breaks the line inside the same
-                    // block's content, instead of spawning a new child block.
-                    // Shift+Enter takes over the old "create a new block"
-                    // behavior, so nesting more children is still possible.
-                    e.preventDefault();
-                    if (e.shiftKey) {
-                        insertNewBlockAfterEnter(currentRow, currentType);
-                    } else {
-                        insertHtmlAtCursor('<br>', contentDiv);
-                    }
-                    return;
-                }
-
-                if (e.shiftKey) return; // top-level block: browser's default line break is unaffected
-
+                // Plain Enter always breaks the line inside the current
+                // block's content (whether it's a top-level block that
+                // hasn't been nested under anything yet, or a nested child
+                // block). Shift+Enter is what now creates a new block/tool —
+                // this is the action plain Enter used to perform.
                 e.preventDefault();
-                insertNewBlockAfterEnter(currentRow, currentType);
+                if (e.shiftKey) {
+                    insertNewBlockAfterEnter(currentRow, currentType);
+                } else {
+                    insertHtmlAtCursor('<br>', contentDiv);
+                }
                 return;
             }
 
