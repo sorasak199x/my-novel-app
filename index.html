@@ -4577,17 +4577,29 @@
             }
 
             if (e.key === 'Enter') {
-                // Plain Enter always breaks the line inside the current
-                // block's content (whether it's a top-level block that
-                // hasn't been nested under anything yet, or a nested child
-                // block). Shift+Enter is what now creates a new block/tool —
-                // this is the action plain Enter used to perform.
-                e.preventDefault();
-                if (e.shiftKey) {
-                    insertNewBlockAfterEnter(currentRow, currentType);
-                } else {
-                    insertHtmlAtCursor('<br>', contentDiv);
+                // The toggle tool, and a plain "text" block (the blank
+                // starting-page state before any other tool has been
+                // picked), get the "Enter = new line inside the block,
+                // Shift+Enter = create a new block" treatment — whether
+                // top-level or nested. Every other tool (bullet, number,
+                // todo, heading — including any of these when nested)
+                // behaves exactly as in the original file: Enter always
+                // creates a new block, and Shift+Enter falls through to the
+                // browser's normal line break.
+                if (currentType === 'toggle' || currentType === 'text') {
+                    e.preventDefault();
+                    if (e.shiftKey) {
+                        insertNewBlockAfterEnter(currentRow, currentType);
+                    } else {
+                        insertHtmlAtCursor('<br>', contentDiv);
+                    }
+                    return;
                 }
+
+                if (e.shiftKey) return; // original behavior: browser's normal line break
+
+                e.preventDefault();
+                insertNewBlockAfterEnter(currentRow, currentType);
                 return;
             }
 
