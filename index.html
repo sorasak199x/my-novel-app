@@ -3124,15 +3124,15 @@
                 : `<span style="display:inline-block;width:22px;flex-shrink:0;"></span>`;
 
             item.innerHTML = `
-                                <div style="display: flex; align-items: center; gap: 6px; flex-grow: 1; overflow: hidden; min-width:0;">
-                                    ${toggleArrow}
-                                    <span class="project-icon">${desc.iconText}</span>
-                                    <span class="project-name" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${desc.titleText}</span>
-                                </div>
-                                <div class="project-item-actions">
-                                    <button class="proj-action-btn" onclick="openProjectMenu(event, ${desc.id}, this)">•••</button>
-                                    <button class="proj-action-btn" onclick="openToolMenu(event, this, ${desc.id})">+</button>
-                                </div>`;
+                            <div style="display: flex; align-items: center; gap: 6px; flex-grow: 1; overflow: hidden; min-width:0;">
+                                ${toggleArrow}
+                                <span class="project-icon">${desc.iconText}</span>
+                                <span class="project-name" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${desc.titleText}</span>
+                            </div>
+                            <div class="project-item-actions">
+                                <button class="proj-action-btn" onclick="openProjectMenu(event, ${desc.id}, this)">•••</button>
+                                <button class="proj-action-btn" onclick="openToolMenu(event, this, ${desc.id})">+</button>
+                            </div>`;
 
             attachDragListeners(item, desc.id);
             return item;
@@ -3566,18 +3566,18 @@
                 const daysLeft = getTrashDaysLeft(proj);
                 const daysLeftText = daysLeft <= 1 ? 'Will be permanently deleted within 1 day' : `Will be permanently deleted in ${daysLeft} days`;
                 item.innerHTML = `
-                                                                                                                                                                            <div style="display: flex; align-items: center; gap: 15px; overflow: hidden;">
-                                                                                                                                                                                <span style="font-size: 24px; flex-shrink: 0;">${iconText}</span>
-                                                                                                                                                                                <div style="display: flex; flex-direction: column; overflow: hidden; min-width: 0;">
-                                                                                                                                                                                    <span style="font-weight: bold; font-size: 16px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${proj.title.replace(/<[^>]*>?/gm, '').trim() || "Untitled"}</span>
-                                                                                                                                                                                    <span style="font-size: 12px; color: var(--text-muted); margin-top: 2px;">${daysLeftText}</span>
-                                                                                                                                                                                </div>
+                                                                                                                                                                        <div style="display: flex; align-items: center; gap: 15px; overflow: hidden;">
+                                                                                                                                                                            <span style="font-size: 24px; flex-shrink: 0;">${iconText}</span>
+                                                                                                                                                                            <div style="display: flex; flex-direction: column; overflow: hidden; min-width: 0;">
+                                                                                                                                                                                <span style="font-weight: bold; font-size: 16px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${proj.title.replace(/<[^>]*>?/gm, '').trim() || "Untitled"}</span>
+                                                                                                                                                                                <span style="font-size: 12px; color: var(--text-muted); margin-top: 2px;">${daysLeftText}</span>
                                                                                                                                                                             </div>
-                                                                                                                                                                            <div style="display: flex; gap: 10px; flex-shrink: 0;">
-                                                                                                                                                                                <button onclick="restoreProject(${proj.id}, event)" style="padding: 8px 16px; background: var(--hover-bg); color: var(--text-color); border: 1px solid var(--border-color); border-radius: 6px; cursor: pointer; font-size: 14px; transition: background 0.2s;" onmouseover="this.style.background='rgba(255,255,255,0.1)'" onmouseout="this.style.background='var(--hover-bg)'">Restore</button>
-                                                                                                                                                                                <button onclick="permanentlyDeleteProject(${proj.id}, event)" style="padding: 8px 16px; background: transparent; color: var(--danger-color); border: 1px solid var(--danger-color); border-radius: 6px; cursor: pointer; font-size: 14px; transition: background 0.2s;" onmouseover="this.style.background='rgba(235, 87, 87, 0.1)'" onmouseout="this.style.background='transparent'">Delete Permanently</button>
-                                                                                                                                                                            </div>
-                                                                                                                                                                        `;
+                                                                                                                                                                        </div>
+                                                                                                                                                                        <div style="display: flex; gap: 10px; flex-shrink: 0;">
+                                                                                                                                                                            <button onclick="restoreProject(${proj.id}, event)" style="padding: 8px 16px; background: var(--hover-bg); color: var(--text-color); border: 1px solid var(--border-color); border-radius: 6px; cursor: pointer; font-size: 14px; transition: background 0.2s;" onmouseover="this.style.background='rgba(255,255,255,0.1)'" onmouseout="this.style.background='var(--hover-bg)'">Restore</button>
+                                                                                                                                                                            <button onclick="permanentlyDeleteProject(${proj.id}, event)" style="padding: 8px 16px; background: transparent; color: var(--danger-color); border: 1px solid var(--danger-color); border-radius: 6px; cursor: pointer; font-size: 14px; transition: background 0.2s;" onmouseover="this.style.background='rgba(235, 87, 87, 0.1)'" onmouseout="this.style.background='transparent'">Delete Permanently</button>
+                                                                                                                                                                        </div>
+                                                                                                                                                                    `;
                 list.appendChild(item);
             });
         }
@@ -4029,13 +4029,13 @@
             const controls = document.createElement('div');
             controls.className = 'block-controls';
             controls.innerHTML = `
-                                                                                                                                                                                                        <button class="add-btn" onclick="openAddMenu(event, this)">+
-                                                                                                                                                                                                            <span class="tooltip-text">Click to add below<br>Alt-click to add a block above</span>
-                                                                                                                                                                                                        </button>
-                                                                                                                                                                                                        <button class="drag-btn" onclick="openOptionsMenu(event, this)">⋮⋮
-                                                                                                                                                                                                            <span class="tooltip-text">Drag to move<br>Click or ctrl/ to open menu</span>
-                                                                                                                                                                                                        </button>
-                                                                                                                                                                                                    `;
+                                                                                                                                                                                                    <button class="add-btn" onclick="openAddMenu(event, this)">+
+                                                                                                                                                                                                        <span class="tooltip-text">Click to add below<br>Alt-click to add a block above</span>
+                                                                                                                                                                                                    </button>
+                                                                                                                                                                                                    <button class="drag-btn" onclick="openOptionsMenu(event, this)">⋮⋮
+                                                                                                                                                                                                        <span class="tooltip-text">Drag to move<br>Click or ctrl/ to open menu</span>
+                                                                                                                                                                                                    </button>
+                                                                                                                                                                                                `;
 
             const wrapper = document.createElement('div');
             wrapper.className = 'block-content-wrapper';
@@ -4084,15 +4084,15 @@
                 ghost.id = 'ghostAddBlock';
                 ghost.className = 'block-row ghost-row';
                 ghost.innerHTML = `
-                                                                                                                                                                                                            <div class="block-main">
-                                                                                                                                                                                                                <div class="block-controls" style="opacity: 1;">
-                                                                                                                                                                                                                    <button class="add-btn" onclick="openAddMenu(event, this); event.stopPropagation();">+</button>
-                                                                                                                                                                                                                </div>
-                                                                                                                                                                                                                <div class="block-content-wrapper" onclick="addBlockFromGhost(); event.stopPropagation();">
-                                                                                                                                                                                                                    <div class="ghost-placeholder">Click to add below</div>
-                                                                                                                                                                                                                </div>
+                                                                                                                                                                                                        <div class="block-main">
+                                                                                                                                                                                                            <div class="block-controls" style="opacity: 1;">
+                                                                                                                                                                                                                <button class="add-btn" onclick="openAddMenu(event, this); event.stopPropagation();">+</button>
                                                                                                                                                                                                             </div>
-                                                                                                                                                                                                        `;
+                                                                                                                                                                                                            <div class="block-content-wrapper" onclick="addBlockFromGhost(); event.stopPropagation();">
+                                                                                                                                                                                                                <div class="ghost-placeholder">Click to add below</div>
+                                                                                                                                                                                                            </div>
+                                                                                                                                                                                                        </div>
+                                                                                                                                                                                                    `;
             }
             editor.appendChild(ghost);
         }
@@ -4245,18 +4245,105 @@
         let isComposing = false;
         let debounceTimer = null;
 
+        /* ----- Paste sanitization -----
+           Goal: keep the *look* of the copied text (font, size, weight,
+           italic, underline, color) but strip out structural/block-level
+           markup (div, p, table, meta, etc.) that browsers include when you
+           copy from Word, a webpage, or a chat app. Those block elements are
+           what used to make pasted text jump down onto a new line inside a
+           single toggle/text line. Block boundaries are converted to a
+           single <br> instead of being kept as their own block. */
+        const PASTE_ALLOWED_INLINE_TAGS = new Set(['B', 'STRONG', 'I', 'EM', 'U', 'S', 'STRIKE', 'SPAN', 'FONT', 'SUB', 'SUP', 'A', 'BR']);
+        const PASTE_REMOVE_ENTIRELY_TAGS = new Set(['SCRIPT', 'STYLE', 'META', 'LINK', 'TITLE', 'HEAD', 'OBJECT', 'EMBED', 'IFRAME', 'NOSCRIPT', 'IMG', 'SVG', 'INPUT', 'BUTTON', 'SELECT', 'TEXTAREA', 'CANVAS', 'VIDEO', 'AUDIO']);
+        const PASTE_STYLE_WHITELIST = ['font-family', 'font-size', 'font-weight', 'font-style', 'text-decoration', 'text-decoration-line', 'color', 'background-color'];
+
+        function paste_cleanStyleAttr(el) {
+            const style = el.getAttribute('style');
+            if (!style) return;
+            const kept = [];
+            style.split(';').forEach(rule => {
+                const idx = rule.indexOf(':');
+                if (idx === -1) return;
+                const prop = rule.slice(0, idx).trim().toLowerCase();
+                const val = rule.slice(idx + 1).trim();
+                if (val && PASTE_STYLE_WHITELIST.includes(prop)) kept.push(prop + ': ' + val);
+            });
+            if (kept.length) el.setAttribute('style', kept.join('; '));
+            else el.removeAttribute('style');
+        }
+
+        function paste_processChildren(node) {
+            Array.from(node.childNodes).forEach(child => {
+                if (child.nodeType === Node.ELEMENT_NODE) paste_processElement(child);
+                else if (child.nodeType === Node.COMMENT_NODE) child.remove();
+            });
+        }
+
+        function paste_processElement(el) {
+            const tag = el.tagName;
+
+            if (PASTE_REMOVE_ENTIRELY_TAGS.has(tag)) {
+                el.remove();
+                return;
+            }
+
+            paste_processChildren(el);
+
+            if (PASTE_ALLOWED_INLINE_TAGS.has(tag)) {
+                const href = tag === 'A' ? el.getAttribute('href') : null;
+                paste_cleanStyleAttr(el);
+                const keptStyle = el.getAttribute('style');
+                Array.from(el.attributes).forEach(attr => el.removeAttribute(attr.name));
+                if (keptStyle) el.setAttribute('style', keptStyle);
+                if (tag === 'A' && href) el.setAttribute('href', href);
+            } else {
+                // Unknown or block-level element (div, p, h1-6, li, table, tr, td...):
+                // unwrap it, replacing it with just its (already-cleaned) children,
+                // and mark the boundary with a single line break instead of a new block.
+                const parent = el.parentNode;
+                if (!parent) return;
+                parent.insertBefore(document.createElement('br'), el);
+                while (el.firstChild) parent.insertBefore(el.firstChild, el);
+                parent.removeChild(el);
+            }
+        }
+
+        function sanitizePastedHtml(html) {
+            const container = document.createElement('div');
+            container.innerHTML = html;
+            paste_processChildren(container);
+            let result = container.innerHTML;
+            // Collapse redundant line breaks left over from nested block elements,
+            // and drop leading/trailing ones so pasted text starts on the current line.
+            result = result.replace(/(?:<br\s*\/?>\s*){2,}/gi, '<br>');
+            result = result.replace(/^(?:<br\s*\/?>\s*)+/i, '').replace(/(?:<br\s*\/?>\s*)+$/i, '');
+            return result;
+        }
+
+        function paste_escapePlainText(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML.replace(/\r\n|\r|\n/g, '<br>');
+        }
+
         function setupEditorListeners(el) {
-            // Force plain-text paste inside block-content editors.
-            // Without this, pasted clipboard HTML (divs/paragraphs/spans from
-            // Word, browsers, chat apps, etc.) gets inserted as-is, which
-            // creates extra line breaks and pushes the text down onto a new
-            // line inside what should be a single toggle/text line.
+            // Preserve the copied text's own formatting (font, size, bold,
+            // italic, underline, color) but strip structural markup so it
+            // doesn't push the line down — see sanitizePastedHtml above.
             el.addEventListener('paste', function (e) {
                 const target = e.target.closest && e.target.closest('.block-content');
                 if (!target) return;
                 e.preventDefault();
-                const text = (e.clipboardData || window.clipboardData).getData('text/plain');
-                document.execCommand('insertText', false, text);
+                const cd = e.clipboardData || window.clipboardData;
+                const html = cd.getData('text/html');
+                let insertHtml;
+                if (html && html.trim()) {
+                    insertHtml = sanitizePastedHtml(html);
+                } else {
+                    const text = cd.getData('text/plain') || '';
+                    insertHtml = paste_escapePlainText(text);
+                }
+                document.execCommand('insertHTML', false, insertHtml);
             });
 
             el.addEventListener('compositionstart', function () {
@@ -4548,22 +4635,22 @@
             newItem.className = 'timeline-item';
 
             newItem.innerHTML = `
-                                                                                                                                                                    <div class="timeline-content">
-                                                                                                                                                                        <div class="datetime-group">
-                                                                                                                                                                            <input type="text" class="input-date" placeholder="DD/MM/YYYY">
-                                                                                                                                                                            <input type="text" class="input-time" placeholder="Time / Time Period">
+                                                                                                                                                                <div class="timeline-content">
+                                                                                                                                                                    <div class="datetime-group">
+                                                                                                                                                                        <input type="text" class="input-date" placeholder="DD/MM/YYYY">
+                                                                                                                                                                        <input type="text" class="input-time" placeholder="Time / Time Period">
+                                                                                                                                                                    </div>
+                                                                                                                                                                    <div class="details-group">
+                                                                                                                                                                        <div class="header-row">
+                                                                                                                                                                            <input type="text" class="input-title" placeholder="Event Title...">
+                                                                                                                                                                            <button class="btn-delete-event" onclick="deleteTimelineItem(this)">Delete</button>
                                                                                                                                                                         </div>
-                                                                                                                                                                        <div class="details-group">
-                                                                                                                                                                            <div class="header-row">
-                                                                                                                                                                                <input type="text" class="input-title" placeholder="Event Title...">
-                                                                                                                                                                                <button class="btn-delete-event" onclick="deleteTimelineItem(this)">Delete</button>
-                                                                                                                                                                            </div>
-                                                                                                                                                                            <div class="timeline-body">
-                                                                                                                                                                                <textarea placeholder="Type event details here..."></textarea>
-                                                                                                                                                                            </div>
+                                                                                                                                                                        <div class="timeline-body">
+                                                                                                                                                                            <textarea placeholder="Type event details here..."></textarea>
                                                                                                                                                                         </div>
                                                                                                                                                                     </div>
-                                                                                                                                                                `;
+                                                                                                                                                                </div>
+                                                                                                                                                            `;
 
             container.appendChild(newItem);
             newItem.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
@@ -4798,24 +4885,24 @@
                 node.style.top = ((workspace.clientHeight / 2 - panY) / scale + offsetY - 40) + 'px';
             }
             node.innerHTML = `
-                                                                                                                                                                            <div class="color-palette" id="palette_${id}">
-                                                                                                                                                                                <div class="swatch c-default" onclick="setColor('${id}','border-c-default',event)"></div>
-                                                                                                                                                                                <div class="swatch c-blue" onclick="setColor('${id}','border-c-blue',event)"></div>
-                                                                                                                                                                                <div class="swatch c-red" onclick="setColor('${id}','border-c-red',event)"></div>
-                                                                                                                                                                                <div class="swatch c-pink" onclick="setColor('${id}','border-c-pink',event)"></div>
-                                                                                                                                                                                <div class="swatch c-green" onclick="setColor('${id}','border-c-green',event)"></div>
-                                                                                                                                                                                <div class="swatch c-purple" onclick="setColor('${id}','border-c-purple',event)"></div>
-                                                                                                                                                                                <div class="swatch c-yellow" onclick="setColor('${id}','border-c-yellow',event)"></div>
-                                                                                                                                                                            </div>
-                                                                                                                                                                            <div class="image-circle ${defaultColor}" id="circle_${id}">
-                                                                                                                                                                                <span>Image</span>
-                                                                                                                                                                                <div class="btn-delete-node node-btn" onclick="deleteNode('${id}',event)">✕</div>
-                                                                                                                                                                                <div class="btn-color-trigger node-btn" onclick="togglePalette('${id}',event)">🎨</div>
-                                                                                                                                                                                <div class="btn-connect node-btn" onpointerdown="startLinking('${id}',event)">＋</div>
-                                                                                                                                                                            </div>
-                                                                                                                                                                            <input type="text" class="char-name" value="${defaultName || `Character ${charCount}`}" onfocus="this.select()">
-                                                                                                                                                                            <label class="btn-upload">+ Upload Image<input type="file" accept="image/*" onchange="uploadImg(this,'circle_${id}')" style="display:none;"></label>
-                                                                                                                                                                        `;
+                                                                                                                                                                        <div class="color-palette" id="palette_${id}">
+                                                                                                                                                                            <div class="swatch c-default" onclick="setColor('${id}','border-c-default',event)"></div>
+                                                                                                                                                                            <div class="swatch c-blue" onclick="setColor('${id}','border-c-blue',event)"></div>
+                                                                                                                                                                            <div class="swatch c-red" onclick="setColor('${id}','border-c-red',event)"></div>
+                                                                                                                                                                            <div class="swatch c-pink" onclick="setColor('${id}','border-c-pink',event)"></div>
+                                                                                                                                                                            <div class="swatch c-green" onclick="setColor('${id}','border-c-green',event)"></div>
+                                                                                                                                                                            <div class="swatch c-purple" onclick="setColor('${id}','border-c-purple',event)"></div>
+                                                                                                                                                                            <div class="swatch c-yellow" onclick="setColor('${id}','border-c-yellow',event)"></div>
+                                                                                                                                                                        </div>
+                                                                                                                                                                        <div class="image-circle ${defaultColor}" id="circle_${id}">
+                                                                                                                                                                            <span>Image</span>
+                                                                                                                                                                            <div class="btn-delete-node node-btn" onclick="deleteNode('${id}',event)">✕</div>
+                                                                                                                                                                            <div class="btn-color-trigger node-btn" onclick="togglePalette('${id}',event)">🎨</div>
+                                                                                                                                                                            <div class="btn-connect node-btn" onpointerdown="startLinking('${id}',event)">＋</div>
+                                                                                                                                                                        </div>
+                                                                                                                                                                        <input type="text" class="char-name" value="${defaultName || `Character ${charCount}`}" onfocus="this.select()">
+                                                                                                                                                                        <label class="btn-upload">+ Upload Image<input type="file" accept="image/*" onchange="uploadImg(this,'circle_${id}')" style="display:none;"></label>
+                                                                                                                                                                    `;
             initDrag(node); workspaceInner.appendChild(node); return id;
         }
 
@@ -5049,39 +5136,39 @@
             card.className = 'chart-card';
             card.id = cardId;
             card.innerHTML = `
-                                                                                                                                                    <div class="chart-card-header" onclick="toggleChartCard('${cardId}')">
-                                                                                                                                                        <span class="chart-card-toggle">▼</span>
-                                                                                                                                                        <input class="chart-card-title-input" type="text" placeholder="Chart Title…"
-                                                                                                                                                            value="${savedData ? (savedData.title || '').replace(/"/g, '&quot;') : ''}"
-                                                                                                                                                            onclick="event.stopPropagation()"
-                                                                                                                                                            oninput="renderChartCard('${cardId}')">
-                                                                                                                                                        <span class="chart-card-type-badge" id="${badgeId}">Bar ↕</span>
-                                                                                                                                                        <button class="chart-card-delete" onclick="deleteChartCard(event,'${cardId}')" title="Delete this chart">✕</button>
+                                                                                                                                                <div class="chart-card-header" onclick="toggleChartCard('${cardId}')">
+                                                                                                                                                    <span class="chart-card-toggle">▼</span>
+                                                                                                                                                    <input class="chart-card-title-input" type="text" placeholder="Chart Title…"
+                                                                                                                                                        value="${savedData ? (savedData.title || '').replace(/"/g, '&quot;') : ''}"
+                                                                                                                                                        onclick="event.stopPropagation()"
+                                                                                                                                                        oninput="renderChartCard('${cardId}')">
+                                                                                                                                                    <span class="chart-card-type-badge" id="${badgeId}">Bar ↕</span>
+                                                                                                                                                    <button class="chart-card-delete" onclick="deleteChartCard(event,'${cardId}')" title="Delete this chart">✕</button>
+                                                                                                                                                </div>
+                                                                                                                                                <div class="chart-card-body">
+                                                                                                                                                    <div class="graph-toolbar" style="margin-bottom:20px;">
+                                                                                                                                                        <label class="graph-label">Type
+                                                                                                                                                            <select id="${typeId}" onchange="renderChartCard('${cardId}')">
+                                                                                                                                                                <option value="bar">Bar (Vertical)</option>
+                                                                                                                                                                <option value="bar_h">Bar (Horizontal)</option>
+                                                                                                                                                                <option value="line">Line</option>
+                                                                                                                                                                <option value="pie">Pie</option>
+                                                                                                                                                            </select>
+                                                                                                                                                        </label>
+                                                                                                                                                        <button class="btn-notion primary" onclick="addChartRow('${rowsId}','${cardId}')">＋ Add Row</button>
                                                                                                                                                     </div>
-                                                                                                                                                    <div class="chart-card-body">
-                                                                                                                                                        <div class="graph-toolbar" style="margin-bottom:20px;">
-                                                                                                                                                            <label class="graph-label">Type
-                                                                                                                                                                <select id="${typeId}" onchange="renderChartCard('${cardId}')">
-                                                                                                                                                                    <option value="bar">Bar (Vertical)</option>
-                                                                                                                                                                    <option value="bar_h">Bar (Horizontal)</option>
-                                                                                                                                                                    <option value="line">Line</option>
-                                                                                                                                                                    <option value="pie">Pie</option>
-                                                                                                                                                                </select>
-                                                                                                                                                            </label>
-                                                                                                                                                            <button class="btn-notion primary" onclick="addChartRow('${rowsId}','${cardId}')">＋ Add Row</button>
-                                                                                                                                                        </div>
-                                                                                                                                                        <div class="graph-body" id="gbody_${cardId}">
-                                                                                                                                                            <div class="graph-data-panel">
-                                                                                                                                                                <div class="graph-data-header">
-                                                                                                                                                                    <span>Label</span><span>Value</span><span>Color</span><span></span>
-                                                                                                                                                                </div>
-                                                                                                                                                                <div id="${rowsId}"></div>
+                                                                                                                                                    <div class="graph-body" id="gbody_${cardId}">
+                                                                                                                                                        <div class="graph-data-panel">
+                                                                                                                                                            <div class="graph-data-header">
+                                                                                                                                                                <span>Label</span><span>Value</span><span>Color</span><span></span>
                                                                                                                                                             </div>
-                                                                                                                                                            <div class="graph-canvas-panel">
-                                                                                                                                                                <canvas id="${canvasId}"></canvas>
-                                                                                                                                                            </div>
+                                                                                                                                                            <div id="${rowsId}"></div>
                                                                                                                                                         </div>
-                                                                                                                                                    </div>`;
+                                                                                                                                                        <div class="graph-canvas-panel">
+                                                                                                                                                            <canvas id="${canvasId}"></canvas>
+                                                                                                                                                        </div>
+                                                                                                                                                    </div>
+                                                                                                                                                </div>`;
 
             document.getElementById('chartCardList').appendChild(card);
 
@@ -5124,15 +5211,15 @@
             row.className = 'graph-row';
             row.id = rowId;
             row.innerHTML = `
-                                                                                                                                                    <input type="text" class="graph-label-input" placeholder="Label…"
-                                                                                                                                                        value="${label !== undefined ? String(label).replace(/"/g, '&quot;') : ''}"
-                                                                                                                                                        oninput="renderChartCard('${cardId}')">
-                                                                                                                                                    <input type="number" class="graph-value-input" placeholder="0"
-                                                                                                                                                        value="${value !== undefined && value !== null ? value : ''}"
-                                                                                                                                                        oninput="renderChartCard('${cardId}')">
-                                                                                                                                                    <input type="color" class="graph-color-input" value="${autoColor}"
-                                                                                                                                                        oninput="renderChartCard('${cardId}')">
-                                                                                                                                                    <button class="graph-row-delete" onclick="document.getElementById('${rowId}').remove(); renderChartCard('${cardId}')" title="Delete row">✕</button>`;
+                                                                                                                                                <input type="text" class="graph-label-input" placeholder="Label…"
+                                                                                                                                                    value="${label !== undefined ? String(label).replace(/"/g, '&quot;') : ''}"
+                                                                                                                                                    oninput="renderChartCard('${cardId}')">
+                                                                                                                                                <input type="number" class="graph-value-input" placeholder="0"
+                                                                                                                                                    value="${value !== undefined && value !== null ? value : ''}"
+                                                                                                                                                    oninput="renderChartCard('${cardId}')">
+                                                                                                                                                <input type="color" class="graph-color-input" value="${autoColor}"
+                                                                                                                                                    oninput="renderChartCard('${cardId}')">
+                                                                                                                                                <button class="graph-row-delete" onclick="document.getElementById('${rowId}').remove(); renderChartCard('${cardId}')" title="Delete row">✕</button>`;
             document.getElementById(rowsId).appendChild(row);
         }
 
@@ -6896,9 +6983,9 @@
                     cloudContainer.style.boxSizing = 'border-box';
 
                     cloudContainer.innerHTML = `
-                                                                                                                    <button id="cloudSyncBtn" onclick="saveToCloud()" style="flex:1; background: #2383E2; color: white; border: none; padding: 6px 4px; border-radius: 4px; cursor: pointer; font-size: 11px; font-weight: bold; transition: opacity 0.15s;">☁️ Save Online</button>
-                                                                                                                    <button onclick="loadFromCloud()" style="flex:1; background: #2f2f2f; color: var(--text-color); border: 1px solid var(--border-color); padding: 6px 4px; border-radius: 4px; cursor: pointer; font-size: 11px; font-weight: bold; transition: opacity 0.15s;">📂 Load from Cloud</button>
-                                                                                                                `;
+                                                                                                                <button id="cloudSyncBtn" onclick="saveToCloud()" style="flex:1; background: #2383E2; color: white; border: none; padding: 6px 4px; border-radius: 4px; cursor: pointer; font-size: 11px; font-weight: bold; transition: opacity 0.15s;">☁️ Save Online</button>
+                                                                                                                <button onclick="loadFromCloud()" style="flex:1; background: #2f2f2f; color: var(--text-color); border: 1px solid var(--border-color); padding: 6px 4px; border-radius: 4px; cursor: pointer; font-size: 11px; font-weight: bold; transition: opacity 0.15s;">📂 Load from Cloud</button>
+                                                                                                            `;
 
                     sidebarHeader.style.flexDirection = 'column';
                     sidebarHeader.style.alignItems = 'flex-start';
