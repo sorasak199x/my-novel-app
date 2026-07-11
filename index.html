@@ -4501,6 +4501,33 @@
         setupEditorListeners(document.getElementById('editorSpace'));
         setupEditorListeners(document.querySelector('.page-title'));
 
+        // Creates a new block right after (or, for an expanded toggle, inside)
+        // currentRow. This is the action plain Enter used to perform for every
+        // block; it's now also reused for Shift+Enter on nested (child) blocks.
+        function insertNewBlockAfterEnter(currentRow, currentType) {
+            saveState();
+
+            let nextType = currentType;
+            if (currentType.startsWith('h')) nextType = 'text';
+
+            const childrenDiv = currentRow.querySelector('.block-children');
+
+            if (currentType === 'toggle' && childrenDiv && childrenDiv.style.display === 'block') {
+                const newBlock = createBlockElement('text');
+                childrenDiv.insertBefore(newBlock, childrenDiv.firstChild);
+                newBlock.querySelector('.block-content').focus();
+                updateNumberedLists(childrenDiv);
+            } else {
+                const newBlock = createBlockElement(nextType);
+                currentRow.insertAdjacentElement('afterend', newBlock);
+                newBlock.querySelector('.block-content').focus();
+                updateNumberedLists(currentRow.parentElement);
+            }
+
+            appendGhostBlock();
+            saveState();
+        }
+
         document.getElementById('editorSpace').addEventListener('keydown', function (e) {
             const contentDiv = e.target;
             if (!contentDiv.classList.contains('block-content')) return;
@@ -4549,29 +4576,29 @@
                 return;
             }
 
-            if (e.key === 'Enter' && !e.shiftKey) {
-                e.preventDefault();
-                saveState();
+            if (e.key === 'Enter') {
+                const parentChildren = currentRow.parentElement;
+                const isChildBlock = parentChildren && parentChildren.classList.contains('block-children');
 
-                let nextType = currentType;
-                if (currentType.startsWith('h')) nextType = 'text';
-
-                const childrenDiv = currentRow.querySelector('.block-children');
-
-                if (currentType === 'toggle' && childrenDiv && childrenDiv.style.display === 'block') {
-                    const newBlock = createBlockElement('text');
-                    childrenDiv.insertBefore(newBlock, childrenDiv.firstChild);
-                    newBlock.querySelector('.block-content').focus();
-                    updateNumberedLists(childrenDiv);
-                } else {
-                    const newBlock = createBlockElement(nextType);
-                    currentRow.insertAdjacentElement('afterend', newBlock);
-                    newBlock.querySelector('.block-content').focus();
-                    updateNumberedLists(currentRow.parentElement);
+                if (isChildBlock) {
+                    // This block is nested (a child) under another block.
+                    // Plain Enter now just breaks the line inside the same
+                    // block's content, instead of spawning a new child block.
+                    // Shift+Enter takes over the old "create a new block"
+                    // behavior, so nesting more children is still possible.
+                    e.preventDefault();
+                    if (e.shiftKey) {
+                        insertNewBlockAfterEnter(currentRow, currentType);
+                    } else {
+                        insertHtmlAtCursor('<br>', contentDiv);
+                    }
+                    return;
                 }
 
-                appendGhostBlock();
-                saveState();
+                if (e.shiftKey) return; // top-level block: browser's default line break is unaffected
+
+                e.preventDefault();
+                insertNewBlockAfterEnter(currentRow, currentType);
                 return;
             }
 
