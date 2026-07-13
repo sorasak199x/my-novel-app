@@ -3019,6 +3019,27 @@
     </div>
 
     <script>
+        /* ----- Fix: page frozen at "however it looked when bookmarked" on mobile -----
+           Root cause: opening a page from a home-screen bookmark (or switching
+           back to a backgrounded browser tab) very often restores the page from
+           the browser's back-forward cache (bfcache) instead of doing a real
+           navigation/reload. When that happens, NONE of this script re-runs —
+           the exact JS memory state, DOM, and `projects` array from the moment
+           the tab was last open are just shown again as-is. So even correct
+           cloud-fetch code never gets a chance to run, and the page looks stuck
+           at whatever data existed back when it was first opened/bookmarked.
+           Fix: the 'pageshow' event fires both on a normal load AND a bfcache
+           restore, but only in the bfcache case is event.persisted === true.
+           When we detect that, force a real reload so the page (and all its
+           data-loading logic) actually runs fresh. */
+        window.addEventListener('pageshow', function (event) {
+            const nav = performance.getEntriesByType && performance.getEntriesByType('navigation')[0];
+            const isBackForward = nav && nav.type === 'back_forward';
+            if (event.persisted || isBackForward) {
+                window.location.reload();
+            }
+        });
+
         /* ----- Toggle Sidebar System ----- */
         function toggleSidebar() {
             document.body.classList.toggle('sidebar-collapsed');
