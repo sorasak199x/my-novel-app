@@ -7032,11 +7032,16 @@
                 return;
             }
 
-            const urlWithToken = CLOUD_API_URL + "?token=" + encodeURIComponent(CLOUD_SECRET_TOKEN);
+            // cache:'no-store' + a unique timestamp query param stop mobile
+            // browsers (and some carrier/proxy caches) from ever reusing a
+            // stored response for this URL — see loadFromCloud() below for
+            // the full explanation.
+            const urlWithToken = CLOUD_API_URL + "?token=" + encodeURIComponent(CLOUD_SECRET_TOKEN) + "&_ts=" + Date.now();
             fetch(urlWithToken, {
                 method: "POST",
                 body: JSON.stringify(projects),
-                headers: { "Content-Type": "text/plain" }
+                headers: { "Content-Type": "text/plain" },
+                cache: "no-store"
             })
                 .then(res => res.json())
                 .then(result => {
@@ -7101,12 +7106,13 @@
             const syncBtn = document.getElementById('cloudSyncBtn');
             if (syncBtn) syncBtn.innerText = "⏳ Uploading to Cloud...";
 
-            const urlWithToken = CLOUD_API_URL + "?token=" + encodeURIComponent(CLOUD_SECRET_TOKEN);
+            const urlWithToken = CLOUD_API_URL + "?token=" + encodeURIComponent(CLOUD_SECRET_TOKEN) + "&_ts=" + Date.now();
 
             fetch(urlWithToken, {
                 method: "POST",
                 body: JSON.stringify(projects),
-                headers: { "Content-Type": "text/plain" }
+                headers: { "Content-Type": "text/plain" },
+                cache: "no-store"
             })
                 .then(res => res.json())
                 .then(result => {
@@ -7135,9 +7141,21 @@
             }
             if (!confirm("Load the latest version from Cloud? This will overwrite any unsaved local work.")) return;
 
-            const urlWithToken = CLOUD_API_URL + "?token=" + encodeURIComponent(CLOUD_SECRET_TOKEN);
+            // --- Fix: stale data when loading from a bookmarked mobile page ---
+            // This is a GET request. Without any instruction otherwise, mobile
+            // browsers (Safari on iOS especially, but Chrome too) are free to
+            // serve a previously-cached response for the exact same URL instead
+            // of hitting the network again — this happens more on mobile because
+            // reopening a bookmarked/home-screen page tends to restore from the
+            // browser's cache rather than doing a full reload. Since the URL was
+            // identical every single time (same token, no other params), a cached
+            // response looked indistinguishable from a fresh one to the browser.
+            // Fix: (1) append a unique timestamp so every request has a new URL
+            // the cache has never seen, and (2) explicitly tell fetch not to use
+            // or store a cached response.
+            const urlWithToken = CLOUD_API_URL + "?token=" + encodeURIComponent(CLOUD_SECRET_TOKEN) + "&_ts=" + Date.now();
 
-            fetch(urlWithToken)
+            fetch(urlWithToken, { cache: "no-store" })
                 .then(res => res.json())
                 .then(cloudData => {
                     if (cloudData && cloudData.status === "error") {
