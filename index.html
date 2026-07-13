@@ -7378,6 +7378,47 @@
             });
         })();
 
+        // ====================================================================
+        //  Remove the red spellcheck underline (mobile browsers/keyboards)
+        //  from every editable text field in the app — main editor blocks,
+        //  page title, table cells, timeline/character/graph inputs, etc. —
+        //  including ones created dynamically after the page has loaded.
+        // ====================================================================
+        (function disableSpellcheckEverywhere() {
+            const EDITABLE_SELECTOR = 'input[type="text"], input[type="search"], input:not([type]), textarea, [contenteditable="true"], [contenteditable=""]';
+
+            function applyNoSpellcheck(el) {
+                if (!el || !el.matches || el.dataset.noSpellcheckApplied) return;
+                if (el.matches(EDITABLE_SELECTOR)) {
+                    el.setAttribute('spellcheck', 'false');
+                    el.setAttribute('autocorrect', 'off');
+                    el.setAttribute('autocapitalize', 'off');
+                    el.dataset.noSpellcheckApplied = '1';
+                }
+            }
+
+            function scan(root) {
+                if (!root || root.nodeType !== 1) return;
+                applyNoSpellcheck(root);
+                if (root.querySelectorAll) {
+                    root.querySelectorAll(EDITABLE_SELECTOR).forEach(applyNoSpellcheck);
+                }
+            }
+
+            // Apply to everything already on the page
+            scan(document.body);
+
+            // Keep applying to anything added later — new editor blocks, table
+            // cells, timeline cards, character map nodes, graph nodes, etc. are
+            // all created dynamically with JS
+            const observer = new MutationObserver(mutations => {
+                mutations.forEach(m => {
+                    m.addedNodes.forEach(scan);
+                });
+            });
+            observer.observe(document.body, { childList: true, subtree: true });
+        })();
+
     </script>
     <!-- Unsaved Cloud Changes Modal -->
     <div id="unsavedModal" role="dialog" aria-modal="true" aria-labelledby="unsavedModalTitle">
